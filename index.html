@@ -1,0 +1,271 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Daya Silverstein — Mechanical Engineering @ Queen's</title>
+  <meta name="description" content="Portfolio of Daya Silverstein, Mechanical Engineering student at Queen's University. Projects in sustainable design, HVAC interest, FEA simulation, and CAD." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg: #f7f9fb;
+      --card: #ffffff;
+      --ink: #14213d;
+      --muted: #4b5563;
+      --brand: #5b8def; /* soft google‑ish blue */
+      --accent: #7ad3a8; /* mint */
+      --accent2:#f7b267; /* warm sand */
+      --ring: rgba(91,141,239,.35);
+      --radius: 18px;
+      --shadow: 0 8px 30px rgba(20,33,61,.07);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    a{color:var(--brand);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .container{max-width:1000px;margin:0 auto;padding:24px}
+    header{
+      display:flex;align-items:center;gap:18px;justify-content:space-between;margin:16px 0 8px
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:48px;height:48px}
+    nav a{margin-left:16px;font-weight:600}
+    .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:center;margin:24px 0}
+    .badge{display:inline-block;background:linear-gradient(135deg,var(--brand),var(--accent));color:#fff;padding:6px 12px;border-radius:999px;font-weight:600;font-size:12px;letter-spacing:.4px}
+    h1{font-size:42px;line-height:1.05;margin:10px 0 8px}
+    .subtitle{color:var(--muted);font-size:18px}
+    .cta{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:10px;background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:10px 14px;font-weight:600;box-shadow:var(--shadow)}
+    .btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+    .btn[aria-disabled="true"]{opacity:.55;pointer-events:none}
+    .grid{display:grid;gap:18px}
+    .cards{grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;border:1px solid #eef2f7;transition:transform .2s ease, box-shadow .2s ease}
+    .card:hover{transform:translateY(-3px);box-shadow:0 10px 34px rgba(20,33,61,.10)}
+    .thumb{width:100%;height:160px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;color:#093; font-weight:800}
+    .section{margin:36px 0}
+    .section h2{font-size:28px;margin:0 0 12px}
+    ul.clean{list-style:none;padding:0;margin:0}
+    ul.clean li{margin:10px 0;color:var(--muted)}
+    footer{margin:36px 0 24px;color:var(--muted);font-size:14px}
+    .chips{display:flex;flex-wrap:wrap;gap:8px}
+    .chip{background:#fff;border:1px solid #e5e7eb;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:600}
+    .fade{opacity:0;transform:translateY(8px);animation:fade .6s ease forwards}
+    .fade2{animation-delay:.12s}
+    .fade3{animation-delay:.2s}
+    .fade4{animation-delay:.28s}
+    @keyframes fade{to{opacity:1;transform:translateY(0)}}
+    /* accessibility helpers */
+    .skip{position:absolute;left:-9999px;top:auto}
+    .skip:focus{left:12px;top:12px;background:#fff;border:2px solid var(--brand);padding:8px;border-radius:8px}
+    /* responsive */
+    @media (max-width: 860px){.hero{grid-template-columns:1fr}.subtitle{font-size:16px}}
+  </style>
+</head>
+<body>
+  <a class="skip" href="#content">Skip to content</a>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <!-- DS monogram with half‑gear D -->
+        <svg class="logo" viewBox="0 0 120 120" role="img" aria-label="DS logo">
+          <defs>
+            <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0" stop-color="#5b8def"/>
+              <stop offset="1" stop-color="#7ad3a8"/>
+            </linearGradient>
+          </defs>
+          <rect x="0" y="0" width="120" height="120" rx="24" fill="#ffffff" stroke="#e5e7eb"/>
+          <!-- Half gear forming the D spine -->
+          <g transform="translate(18,18)">
+            <circle cx="30" cy="42" r="26" fill="none" stroke="url(#g)" stroke-width="12" stroke-dasharray="20 10"/>
+            <!-- D bowl -->
+            <path d="M42 12 h18 a30 30 0 0 1 0 60 H42 Z" fill="url(#g)" opacity=".9"/>
+            <!-- S letter -->
+            <path d="M26 20c10-8 26-6 26 5 0 18-42 10-42 28 0 12 24 14 38 4" fill="none" stroke="#14213d" stroke-width="6" stroke-linecap="round"/>
+          </g>
+        </svg>
+        <strong>Daya Silverstein</strong>
+      </div>
+      <nav aria-label="primary">
+        <a href="#projects">Projects</a>
+        <a href="#skills">Skills</a>
+        <a href="#experience">Experience</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main id="content">
+      <section class="hero">
+        <div class="fade">
+          <span class="badge">Mechanical Engineering student at Queen's</span>
+          <h1>Hello, I’m Daya.</h1>
+          <p class="subtitle">I’m a second‑year Mechanical Engineering student focused on sustainable design, HVAC systems, and FEA simulation. I’m building hands‑on projects and tools that move from concept to working prototypes.</p>
+          <div class="cta">
+            <a class="btn primary" href="#projects" aria-label="View projects">View Projects</a>
+            <a class="btn" href="mailto:daya.silverstein@queensu.ca" aria-label="Email Daya">Email me</a>
+            <a class="btn" href="assets/Resume_Daya_Silverstein.pdf" aria-disabled="true" aria-label="Resume coming soon">Download Resume (soon)</a>
+          </div>
+          <div class="chips" style="margin-top:14px">
+            <span class="chip">Internship‑ready</span>
+            <span class="chip">No tracking • privacy‑friendly</span>
+            <span class="chip">Static • fast</span>
+          </div>
+        </div>
+        <div class="fade fade2">
+          <div class="card" aria-label="About me highlights">
+            <h2 style="margin-top:0">Snapshot</h2>
+            <ul class="clean">
+              <li>Interests: Sustainable design, HVAC, FEA simulation</li>
+              <li>Strengths: Assembly coordination, CAD modeling, early prototyping</li>
+              <li>Looking for: Engineering internships and project teams</li>
+            </ul>
+            <div class="chips" style="margin-top:12px">
+              <span class="chip">Fusion 360</span>
+              <span class="chip">SolidWorks</span>
+              <span class="chip">MATLAB</span>
+              <span class="chip">Python</span>
+              <span class="chip">Arduino</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="projects" class="section fade fade3">
+        <h2>Featured Projects</h2>
+        <div class="grid cards">
+          <!-- Project 1 -->
+          <article class="card">
+            <div class="thumb" aria-hidden="true">Water Filtration + Alum</div>
+            <h3 style="margin:12px 0 6px">Compact Water Filtration System (Alum Coagulation)</h3>
+            <p class="subtitle">Designed and manufactured the mixing assembly; coordinated overall assembly and Arduino timing.</p>
+            <ul class="clean">
+              <li><strong>Problem:</strong> Produce potable water from dirty input in a single, compact system.</li>
+              <li><strong>Approach:</strong> Peristaltic pump + DC motor mixing with alum, followed by mechanical filtration; custom 3D‑printed components.</li>
+              <li><strong>Result:</strong> Working prototype. (Demo video placeholder — YouTube link coming.)</li>
+              <li><strong>Status:</strong> Finished • <span aria-label="year">2025</span></li>
+            </ul>
+            <div class="chips"><span class="chip">Arduino</span><span class="chip">3D printing</span><span class="chip">Peristaltic pump</span></div>
+            <div style="margin-top:10px">
+              <a href="#" aria-disabled="true">Demo (YouTube soon)</a>
+            </div>
+          </article>
+
+          <!-- Project 2 -->
+          <article class="card">
+            <div class="thumb" aria-hidden="true">Path Planning</div>
+            <h3 style="margin:12px 0 6px">Autonomous Path‑Planning for Warehouse Robots</h3>
+            <p class="subtitle">A* path planning and MATLAB simulation to navigate checkpoints while avoiding obstacles.</p>
+            <ul class="clean">
+              <li><strong>Problem:</strong> Plan optimal, collision‑free routes through a warehouse with constraints.</li>
+              <li><strong>Approach:</strong> A* algorithm generates an ideal path; MATLAB used for simulation and testing.</li>
+              <li><strong>Status:</strong> Finished • <span aria-label="year">2025</span></li>
+            </ul>
+            <div class="chips"><span class="chip">A*</span><span class="chip">MATLAB</span></div>
+            <div style="margin-top:10px">
+              <a href="https://github.com/mohammedz06/Autonomous-Path-Finding" target="_blank" rel="noopener">View repository</a>
+            </div>
+          </article>
+
+          <!-- Project 3 -->
+          <article class="card">
+            <div class="thumb" aria-hidden="true">Fusion Add‑in</div>
+            <h3 style="margin:12px 0 6px">AI‑Powered Fusion 360 Assembly Generator</h3>
+            <p class="subtitle">Converts natural‑language prompts into Fusion 360 scripts that generate mechanical assemblies.</p>
+            <ul class="clean">
+              <li><strong>Problem:</strong> Bridge vague design intents and executable CAD by auto‑generating Fusion scripts.</li>
+              <li><strong>Approach:</strong> Python add‑in leveraging Fusion API; schema parsing to produce runnable scripts.</li>
+              <li><strong>Status:</strong> Ongoing • <span aria-label="year">2025</span></li>
+            </ul>
+            <div class="chips"><span class="chip">Python</span><span class="chip">Fusion API</span></div>
+            <div style="margin-top:10px">
+              <a href="https://github.com/days201/Fusion_Assembly_Generator" target="_blank" rel="noopener">View repository</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="skills" class="section fade fade4">
+        <h2>Skills</h2>
+        <div class="grid cards" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
+          <div class="card">
+            <h3 style="margin-top:0">CAD</h3>
+            <ul class="clean">
+              <li>Fusion 360 — <strong>Intermediate</strong></li>
+              <li>SolidWorks — <strong>Intermediate</strong></li>
+              <li>Revit — <strong>Intermediate</strong> (ACU—<em>in progress</em>)</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3 style="margin-top:0">Analysis</h3>
+            <ul class="clean">
+              <li>FEA — <em>in progress</em> (tooling TBD)</li>
+              <li>CFD — <em>in progress</em> (tooling TBD)</li>
+              <li>MATLAB, Python (NumPy)</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3 style="margin-top:0">Fabrication & Controls</h3>
+            <ul class="clean">
+              <li>3D printing</li>
+              <li>Arduino prototyping</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3 style="margin-top:0">Standards</h3>
+            <ul class="clean">
+              <li>GD&T, Tolerancing, basic ASME Y14.5</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="experience" class="section fade">
+        <h2>Experience & Leadership</h2>
+        <article class="card">
+          <h3 style="margin-top:0">Volunteer Tutor — CTA Drop‑in Tutoring Club</h3>
+          <p class="subtitle">Math & Sciences • 2023–2024</p>
+          <ul class="clean">
+            <li>Supported students in core math and science fundamentals; adapted explanations to individual learning styles.</li>
+          </ul>
+        </article>
+        <!-- Future team roles will appear here -->
+      </section>
+
+      <section id="contact" class="section fade">
+        <h2>Contact</h2>
+        <div class="card">
+          <p style="margin-top:0">The fastest way to reach me is email.</p>
+          <p>
+            <a class="btn" href="mailto:daya.silverstein@queensu.ca" aria-label="send email">daya.silverstein@queensu.ca</a>
+          </p>
+          <div class="chips">
+            <a class="chip" href="https://github.com/days201" target="_blank" rel="noopener" aria-label="GitHub">GitHub</a>
+            <a class="chip" href="https://www.linkedin.com/" target="_blank" rel="noopener" aria-label="LinkedIn">LinkedIn</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div>© <span id="y"></span> Daya Silverstein • Built with static HTML/CSS/JS — no cookies, no tracking.</div>
+    </footer>
+  </div>
+
+  <script>
+    // Light progressive enhancement: current year + subtle reduce‑motion respect
+    document.getElementById('y').textContent = new Date().getFullYear();
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (media.matches) {
+      document.querySelectorAll('.fade,.fade2,.fade3,.fade4').forEach(el=>{
+        el.style.animation = 'none';
+        el.style.opacity = 1;
+        el.style.transform = 'none';
+      });
+    }
+  </script>
+</body>
+</html>
