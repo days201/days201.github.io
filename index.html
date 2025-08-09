@@ -21,24 +21,46 @@
       --ring: rgba(91,141,239,.35);
       --radius: 18px;
       --shadow: 0 8px 30px rgba(20,33,61,.07);
+      --hover: translateY(-3px);
+      --hero-glow-x: 50%;
+      --hero-glow-y: 50%;
     }
     *{box-sizing:border-box}
     html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-    a{color:var(--brand);text-decoration:none}
-    a:hover{text-decoration:underline}
+    html{scroll-behavior:smooth}
+    a{color:var(--brand);text-decoration:none;background-image:linear-gradient(currentColor,currentColor);
+      background-size:0% 2px;background-repeat:no-repeat;background-position:0 100%;transition:background-size .25s ease}
+    a:hover{background-size:100% 2px}
+
     .container{max-width:1000px;margin:0 auto;padding:24px}
-    /* header removed per request */
-    .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:center;margin:24px 0}
+    .hero{position:relative;display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:center;margin:24px 0;overflow:clip;border-radius:24px}
+    /* cursor-follow glow */
+    .hero::before{
+      content:"";position:absolute;inset:-40%;
+      background:radial-gradient(600px 400px at var(--hero-glow-x) var(--hero-glow-y), rgba(91,141,239,.10), transparent 60%);
+      pointer-events:none;z-index:0;transition:opacity .2s ease
+    }
+
     .badge{display:inline-block;background:linear-gradient(135deg,var(--brand),var(--accent));color:#fff;padding:6px 12px;border-radius:999px;font-weight:600;font-size:12px;letter-spacing:.4px}
     h1{font-size:42px;line-height:1.05;margin:10px 0 8px}
     .subtitle{color:var(--muted);font-size:18px}
+
     .cta{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
-    .btn{display:inline-flex;align-items:center;gap:10px;background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:10px 14px;font-weight:600;box-shadow:var(--shadow);color:var(--brand)}
+    .btn{position:relative;isolation:isolate;display:inline-flex;align-items:center;gap:10px;background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:10px 14px;font-weight:600;box-shadow:var(--shadow);color:var(--brand);transition:transform .15s var(--ease-out, ease), box-shadow .15s var(--ease-out, ease)}
+    .btn::after{content:"";position:absolute;inset:-2px;border-radius:16px;box-shadow:0 0 0 0 rgba(91,141,239,.25);opacity:0;transition:box-shadow .25s ease, opacity .25s ease;z-index:-1}
+    .btn:hover{transform:translateY(-2px)}
+    .btn:hover::after{opacity:1;box-shadow:0 0 0 6px rgba(91,141,239,.15)}
     .btn[aria-disabled="true"]{opacity:.55;pointer-events:none}
+
     .grid{display:grid;gap:18px}
     .cards{grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
     .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;border:1px solid #eef2f7;transition:transform .2s ease, box-shadow .2s ease}
-    .card:hover{transform:translateY(-3px);box-shadow:0 10px 34px rgba(20,33,61,.10)}
+    .card:hover{transform:var(--hover);box-shadow:0 10px 34px rgba(20,33,61,.10)}
+
+    /* micro tilt */
+    .tilt{perspective:700px;transform-style:preserve-3d}
+    .tilt:hover{transform:perspective(700px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))}
+
     .thumb{
       width:100%;height:160px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;letter-spacing:.3px;text-transform:uppercase;
       position:relative; overflow:hidden; /* needed for canvas + highlight */
@@ -47,17 +69,8 @@
     }
     /* subtle translucent highlight behind the title text — no blur */
     .thumb::after{
-      content:"";
-      position:absolute;
-      left:50%; top:50%;
-      transform:translate(-50%,-50%);
-      width:min(70%,460px);
-      height:34px;
-      background:rgba(255,255,255,.12);
-      border-radius:999px;
-      z-index:0;
-      pointer-events:none;
-      mix-blend-mode:screen;
+      content:"";position:absolute;left:50%; top:50%; transform:translate(-50%,-50%);
+      width:min(70%,460px); height:34px; background:rgba(255,255,255,.12); border-radius:999px; z-index:0; pointer-events:none; mix-blend-mode:screen;
     }
     .thumb > *{position:relative; z-index:1}
 
@@ -79,17 +92,26 @@
     ul.clean li{margin:10px 0;color:var(--muted)}
     footer{margin:36px 0 24px;color:var(--muted);font-size:14px}
     .chips{display:flex;flex-wrap:wrap;gap:8px}
-    .chip{background:#fff;border:1px solid #e5e7eb;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:600}
-    .fade{opacity:0;transform:translateY(8px);animation:fade .6s ease forwards}
-    .fade2{animation-delay:.12s}
-    .fade3{animation-delay:.2s}
-    .fade4{animation-delay:.28s}
-    @keyframes fade{to{opacity:1;transform:translateY(0)}}
+    .chip{background:#fff;border:1px solid #e5e7eb;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:600;transition:transform .12s ease}
+    .chip:hover{transform:translateY(-1px)}
+
+    /* reveal-on-scroll */
+    .reveal{opacity:0;transform:translateY(8px);transition:opacity .5s ease, transform .5s ease}
+    .reveal.in{opacity:1;transform:none}
+
     /* accessibility helpers */
     .skip{position:absolute;left:-9999px;top:auto}
     .skip:focus{left:12px;top:12px;background:#fff;border:2px solid var(--brand);padding:8px;border-radius:8px}
+
     /* responsive */
     @media (max-width: 860px){.hero{grid-template-columns:1fr}.subtitle{font-size:16px}}
+
+    /* reduced motion: hard-disable transforms/animations */
+    @media (prefers-reduced-motion: reduce){
+      *{animation:none !important; transition:none !important}
+      .card:hover,.btn:hover{transform:none !important}
+      .hero::before{display:none}
+    }
   </style>
 </head>
 <body>
@@ -97,21 +119,19 @@
   <div class="container">
 
     <main id="content">
-      <section class="hero">
+      <section class="hero reveal">
         <div class="fade">
           <span class="badge">Mechanical Engineering student at Queen's</span>
           <h1>Hello, I’m Daya.</h1>
-          <!-- rewritten to be personal & concise -->
           <p class="subtitle">I’m a second-year Mechanical Engineering student. My passion lies in creating sustainable designs that maximize efficiency, performance, and turn ideas into practical solutions.</p>
           <div class="cta">
-            <a class="btn" href="#projects" aria-label="View projects">View Projects</a>
-            <a class="btn" href="mailto:daya.silverstein@queensu.ca" aria-label="Email Daya">Email me</a>
+            <a class="btn magnet" href="#projects" aria-label="View projects">View Projects</a>
+            <a class="btn magnet" href="mailto:daya.silverstein@queensu.ca" aria-label="Email Daya">Email me</a>
             <a class="btn" href="assets/Resume_Daya_Silverstein.pdf" aria-disabled="true" aria-label="Resume coming soon">Download Resume (soon)</a>
           </div>
-          <!-- removed "Internship-ready / No tracking / Static fast" chips per request -->
         </div>
         <div class="fade fade2">
-          <div class="card" aria-label="About me highlights">
+          <div class="card tilt" aria-label="About me highlights">
             <h2 style="margin-top:0">In Summary</h2>
             <ul class="clean">
               <li>Interests: Sustainable design, HVAC, FEA simulation</li>
@@ -129,11 +149,11 @@
         </div>
       </section>
 
-      <section id="projects" class="section fade fade3">
+      <section id="projects" class="section reveal">
         <h2>Featured Projects</h2>
         <div class="grid cards">
           <!-- Project 1 -->
-          <article class="card">
+          <article class="card tilt reveal">
             <div class="thumb water" aria-hidden="true">Water Filtration System</div>
             <h3 style="margin:12px 0 6px">Water Filtration System</h3>
             <p class="subtitle">Designed and manufactured the mixing assembly; coordinated overall assembly and Arduino timing.</p>
@@ -150,7 +170,7 @@
           </article>
 
           <!-- Project 2 -->
-          <article class="card">
+          <article class="card tilt reveal">
             <div class="thumb path" aria-hidden="true">Path‑Planning</div>
             <h3 style="margin:12px 0 6px">Autonomous Path‑Planning for Warehouse Robots</h3>
             <p class="subtitle">A* path planning and MATLAB simulation to navigate checkpoints while avoiding obstacles.</p>
@@ -166,7 +186,7 @@
           </article>
 
           <!-- Project 3 -->
-          <article class="card">
+          <article class="card tilt reveal">
             <div class="thumb cad" aria-hidden="true">Fusion Assembly Generator</div>
             <h3 style="margin:12px 0 6px">Fusion Assembly Generator</h3>
             <p class="subtitle">Converts natural‑language prompts into Fusion 360 scripts that generate mechanical assemblies.</p>
@@ -183,10 +203,10 @@
         </div>
       </section>
 
-      <section id="skills" class="section fade fade4">
+      <section id="skills" class="section reveal">
         <h2>Skills</h2>
         <div class="grid cards" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
-          <div class="card">
+          <div class="card tilt reveal">
             <h3 style="margin-top:0">CAD</h3>
             <ul class="clean">
               <li>Fusion 360 — <strong>Intermediate</strong></li>
@@ -194,7 +214,7 @@
               <li>Revit — <strong>Intermediate</strong> (ACU—<em>in progress</em>)</li>
             </ul>
           </div>
-          <div class="card">
+          <div class="card tilt reveal">
             <h3 style="margin-top:0">Analysis</h3>
             <ul class="clean">
               <li>FEA — <em>in progress</em> (tooling TBD)</li>
@@ -202,14 +222,14 @@
               <li>MATLAB, Python (NumPy)</li>
             </ul>
           </div>
-          <div class="card">
+          <div class="card tilt reveal">
             <h3 style="margin-top:0">Fabrication & Controls</h3>
             <ul class="clean">
               <li>3D printing</li>
               <li>Arduino prototyping</li>
             </ul>
           </div>
-          <div class="card">
+          <div class="card tilt reveal">
             <h3 style="margin-top:0">Standards</h3>
             <ul class="clean">
               <li>GD&T, Tolerancing, basic ASME Y14.5</li>
@@ -218,24 +238,23 @@
         </div>
       </section>
 
-      <section id="experience" class="section fade">
+      <section id="experience" class="section reveal">
         <h2>Experience & Leadership</h2>
-        <article class="card">
+        <article class="card tilt reveal">
           <h3 style="margin-top:0">Volunteer Tutor — CTA Drop‑in Tutoring Club</h3>
           <p class="subtitle">Math & Sciences • 2023–2024</p>
           <ul class="clean">
             <li>Supported students in core math and science fundamentals; adapted explanations to individual learning styles.</li>
           </ul>
         </article>
-        <!-- Future team roles will appear here -->
       </section>
 
-      <section id="contact" class="section fade">
+      <section id="contact" class="section reveal">
         <h2>Contact</h2>
-        <div class="card">
+        <div class="card tilt reveal">
           <p style="margin-top:0">The fastest way to reach me is email.</p>
           <p>
-            <a class="btn" href="mailto:daya.silverstein@queensu.ca" aria-label="send email">daya.silverstein@queensu.ca</a>
+            <a class="btn magnet" href="mailto:daya.silverstein@queensu.ca" aria-label="send email">daya.silverstein@queensu.ca</a>
           </p>
           <div class="chips">
             <a class="chip" href="https://github.com/days201" target="_blank" rel="noopener" aria-label="GitHub">GitHub</a>
@@ -253,31 +272,73 @@
   <script>
     // current year
     document.getElementById('y').textContent = new Date().getFullYear();
-    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (media.matches) {
-      document.querySelectorAll('.fade,.fade2,.fade3,.fade4').forEach(el=>{
-        el.style.animation = 'none';
-        el.style.opacity = 1;
-        el.style.transform = 'none';
+
+    const mediaReduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    // Cursor-follow glow in hero
+    const hero = document.querySelector('.hero');
+    if(hero && !mediaReduce.matches){
+      hero.addEventListener('pointermove', (e)=>{
+        const r = hero.getBoundingClientRect();
+        const x = ((e.clientX - r.left)/r.width)*100 + '%';
+        const y = ((e.clientY - r.top)/r.height)*100 + '%';
+        hero.style.setProperty('--hero-glow-x', x);
+        hero.style.setProperty('--hero-glow-y', y);
       });
     }
 
-    // ---- Subtle Dijkstra-style split path animation for Path‑Planning tile ----
+    // Reveal on scroll
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){ entry.target.classList.add('in'); io.unobserve(entry.target); }
+      });
+    },{threshold:.12});
+    document.querySelectorAll('.reveal').forEach(el=> io.observe(el));
+
+    // Magnetic buttons (subtle)
+    document.querySelectorAll('.magnet').forEach(btn=>{
+      if(mediaReduce.matches) return;
+      const strength = 12; // px
+      btn.addEventListener('pointermove', (e)=>{
+        const r = btn.getBoundingClientRect();
+        const mx = e.clientX - (r.left + r.width/2);
+        const my = e.clientY - (r.top + r.height/2);
+        btn.style.transform = `translate(${mx/14}px, ${my/14}px)`; // subtle
+      });
+      btn.addEventListener('pointerleave', ()=>{ btn.style.transform = ''; });
+    });
+
+    // Micro tilt on cards
+    const tilts = document.querySelectorAll('.tilt');
+    tilts.forEach(card=>{
+      if(mediaReduce.matches) return;
+      card.addEventListener('pointermove', (e)=>{
+        const r = card.getBoundingClientRect();
+        const rx = ((e.clientY - r.top) / r.height - .5) * -3; // degrees
+        const ry = ((e.clientX - r.left) / r.width - .5) * 3;
+        card.style.setProperty('--rx', rx + 'deg');
+        card.style.setProperty('--ry', ry + 'deg');
+      });
+      card.addEventListener('pointerleave', ()=>{
+        card.style.removeProperty('--rx');
+        card.style.removeProperty('--ry');
+      });
+    });
+
+    // ---- Subtle split-path animation for Path‑Planning tile (always on) ----
     (function(){
       const tiles = document.querySelectorAll('.thumb.path');
       if (!tiles.length) return;
-
       tiles.forEach(tile => {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
         canvas.style.position = 'absolute';
         canvas.style.inset = '0';
-        canvas.style.zIndex = '0';    // under text + ::after
+        canvas.style.zIndex = '0';
         canvas.setAttribute('aria-hidden','true');
         tile.appendChild(canvas);
 
         let w=0,h=0, dpr=1, running = true; // always run
-
         function resize(){
           const rect = tile.getBoundingClientRect();
           w = Math.floor(rect.width);
@@ -291,130 +352,59 @@
           initGraph();
         }
 
-        // Build a tiny directed acyclic "road" graph with splits
-        let nodes = [];
-        let edges = [];
-        let routes = [];
-        let particles = [];
-
+        let nodes = [], edges = [], routes = [], particles = [];
         function initGraph(){
-          nodes = [];
-          edges = [];
-          routes = [];
-          particles = [];
-
-          const margin = 18;
-          const cy = h/2;
-
-          const cols = 6;
-          const colX = i => margin + (w - margin*2) * (i/(cols-1));
-
+          nodes = []; edges = []; routes = []; particles = [];
+          const margin = 18; const cy = h/2; const cols = 6; const colX = i => margin + (w - margin*2) * (i/(cols-1));
           const n = [];
-          n.push({x: colX(0), y: cy});                       // 0 start
-          n.push({x: colX(1), y: cy});                       // 1
-          n.push({x: colX(2), y: cy - h*0.18});              // 2 upper
-          n.push({x: colX(2), y: cy + h*0.18});              // 3 lower
-          n.push({x: colX(3), y: cy - h*0.28});              // 4 upper-1
-          n.push({x: colX(3), y: cy});                       // 5 mid
-          n.push({x: colX(3), y: cy + h*0.28});              // 6 lower-1
-          n.push({x: colX(4), y: cy - h*0.18});              // 7 upper-2
-          n.push({x: colX(4), y: cy + h*0.18});              // 8 lower-2
-          n.push({x: colX(5), y: cy});                       // 9 end
+          n.push({x: colX(0), y: cy});
+          n.push({x: colX(1), y: cy});
+          n.push({x: colX(2), y: cy - h*0.18});
+          n.push({x: colX(2), y: cy + h*0.18});
+          n.push({x: colX(3), y: cy - h*0.28});
+          n.push({x: colX(3), y: cy});
+          n.push({x: colX(3), y: cy + h*0.28});
+          n.push({x: colX(4), y: cy - h*0.18});
+          n.push({x: colX(4), y: cy + h*0.18});
+          n.push({x: colX(5), y: cy});
           nodes = n;
-
           function addEdge(a,b){ edges.push({a,b}); }
-
           addEdge(0,1);
           addEdge(1,2); addEdge(1,3);
           addEdge(2,4); addEdge(2,5);
           addEdge(3,5); addEdge(3,6);
           addEdge(4,7); addEdge(5,7); addEdge(5,8); addEdge(6,8);
           addEdge(7,9); addEdge(8,9);
-
-          routes = [
-            [0,1,2,4,7,9],
-            [0,1,2,5,7,9],
-            [0,1,3,5,8,9],
-            [0,1,3,6,8,9]
-          ];
-
+          routes = [ [0,1,2,4,7,9], [0,1,2,5,7,9], [0,1,3,5,8,9], [0,1,3,6,8,9] ];
           const count = 8; // subtle
           for (let i=0;i<count;i++){
             const r = routes[i % routes.length];
-            particles.push({
-              route: r.slice(),
-              t: Math.random(),
-              seg: 0,
-              speed: 0.0015 + Math.random()*0.001,
-              radius: 2 + Math.random()*1.5
-            });
+            particles.push({ route: r.slice(), t: Math.random(), seg: 0, speed: 0.0015 + Math.random()*0.001, radius: 2 + Math.random()*1.5 });
           }
         }
 
         function draw(){
           ctx.clearRect(0,0,w,h);
-
-          // Edges
           ctx.lineWidth = 1.5;
           edges.forEach(e=>{
             const A = nodes[e.a], B = nodes[e.b];
             ctx.beginPath();
             ctx.strokeStyle = 'rgba(255,255,255,0.18)';
-            const mx = (A.x+B.x)/2;
-            const my = (A.y+B.y)/2 + (B.y-A.y)*0.15;
-            ctx.moveTo(A.x, A.y);
-            ctx.quadraticCurveTo(mx, my, B.x, B.y);
-            ctx.stroke();
+            const mx = (A.x+B.x)/2; const my = (A.y+B.y)/2 + (B.y-A.y)*0.15;
+            ctx.moveTo(A.x, A.y); ctx.quadraticCurveTo(mx, my, B.x, B.y); ctx.stroke();
           });
-
-          // Nodes
-          nodes.forEach(nd=>{
-            ctx.beginPath();
-            ctx.fillStyle = 'rgba(255,255,255,0.18)';
-            ctx.arc(nd.x, nd.y, 2, 0, Math.PI*2);
-            ctx.fill();
-          });
-
-          // Particles
+          nodes.forEach(nd=>{ ctx.beginPath(); ctx.fillStyle = 'rgba(255,255,255,0.18)'; ctx.arc(nd.x, nd.y, 2, 0, Math.PI*2); ctx.fill(); });
           particles.forEach(p=>{
-            const a = nodes[p.route[p.seg]];
-            const b = nodes[p.route[p.seg+1]];
-            const mx = (a.x+b.x)/2;
-            const my = (a.y+b.y)/2 + (b.y-a.y)*0.15;
-
-            const t = p.t;
-            const x = (1-t)*(1-t)*a.x + 2*(1-t)*t*mx + t*t*b.x;
-            const y = (1-t)*(1-t)*a.y + 2*(1-t)*t*my + t*t*b.y;
-
-            ctx.beginPath();
-            ctx.fillStyle = 'rgba(122,211,168,0.75)';
-            ctx.arc(x, y, p.radius, 0, Math.PI*2);
-            ctx.fill();
-
-            p.t += p.speed;
-            if (p.t >= 1){
-              p.t = 0;
-              p.seg++;
-              if (p.seg >= p.route.length - 1){
-                p.seg = 0;
-                p.route = routes[Math.floor(Math.random()*routes.length)].slice();
-              }
-            }
+            const a = nodes[p.route[p.seg]]; const b = nodes[p.route[p.seg+1]];
+            const mx = (a.x+b.x)/2; const my = (a.y+b.y)/2 + (b.y-a.y)*0.15; const t = p.t;
+            const x = (1-t)*(1-t)*a.x + 2*(1-t)*t*mx + t*t*b.x; const y = (1-t)*(1-t)*a.y + 2*(1-t)*t*my + t*t*b.y;
+            ctx.beginPath(); ctx.fillStyle = 'rgba(122,211,168,0.75)'; ctx.arc(x, y, p.radius, 0, Math.PI*2); ctx.fill();
+            p.t += p.speed; if (p.t >= 1){ p.t = 0; p.seg++; if (p.seg >= p.route.length - 1){ p.seg = 0; p.route = routes[Math.floor(Math.random()*routes.length)].slice(); } }
           });
         }
-
-        let raf=0;
-        function loop(){
-          if (!running) return;
-          draw();
-          raf = requestAnimationFrame(loop);
-        }
-
-        resize();
-        loop(); // start regardless of prefers-reduced-motion
-
+        function loop(){ draw(); requestAnimationFrame(loop); }
+        resize(); loop();
         window.addEventListener('resize', resize);
-        // media.addEventListener?.('change', handleMotion); // disabled on purpose
       });
     })();
   </script>
