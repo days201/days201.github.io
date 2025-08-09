@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,25 +26,31 @@
     a{color:var(--brand);text-decoration:none}
     a:hover{text-decoration:underline}
     .container{max-width:1000px;margin:0 auto;padding:24px}
-    header{
-      display:flex;align-items:center;gap:18px;justify-content:space-between;margin:16px 0 8px
-    }
-    .brand{display:flex;align-items:center;gap:12px}
-    .logo{width:48px;height:48px}
-    nav a{margin-left:16px;font-weight:600}
+    /* header removed per request */
     .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:center;margin:24px 0}
     .badge{display:inline-block;background:linear-gradient(135deg,var(--brand),var(--accent));color:#fff;padding:6px 12px;border-radius:999px;font-weight:600;font-size:12px;letter-spacing:.4px}
     h1{font-size:42px;line-height:1.05;margin:10px 0 8px}
     .subtitle{color:var(--muted);font-size:18px}
     .cta{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
-    .btn{display:inline-flex;align-items:center;gap:10px;background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:10px 14px;font-weight:600;box-shadow:var(--shadow)}
-    .btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+    .btn{display:inline-flex;align-items:center;gap:10px;background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:10px 14px;font-weight:600;box-shadow:var(--shadow);color:var(--brand)}
     .btn[aria-disabled="true"]{opacity:.55;pointer-events:none}
     .grid{display:grid;gap:18px}
     .cards{grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
     .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;border:1px solid #eef2f7;transition:transform .2s ease, box-shadow .2s ease}
     .card:hover{transform:translateY(-3px);box-shadow:0 10px 34px rgba(20,33,61,.10)}
-    .thumb{width:100%;height:160px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;color:#093; font-weight:800}
+    .thumb{width:100%;height:160px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;letter-spacing:.3px;text-transform:uppercase}
+    /* themed project thumbnails */
+    .thumb.water{background:
+      radial-gradient(60% 100% at 20% 0%, rgba(255,255,255,.25) 0 60%, transparent 61%),
+      radial-gradient(40% 80% at 90% 30%, rgba(255,255,255,.18) 0 60%, transparent 61%),
+      linear-gradient(135deg,#7dc9ff,#5b8def 40%, #214e9a)}
+    .thumb.path{background:
+      repeating-linear-gradient(45deg, rgba(255,255,255,.08) 0 10px, rgba(255,255,255,0) 10px 20px),
+      linear-gradient(135deg,#0b1020,#3b485a)}
+    .thumb.cad{background:
+      radial-gradient(200px 200px at 85% 20%, rgba(255,255,255,.35) 0 120px, transparent 121px),
+      linear-gradient(135deg,#0ea5e9,#5b8def)}
+
     .section{margin:36px 0}
     .section h2{font-size:28px;margin:0 0 12px}
     ul.clean{list-style:none;padding:0;margin:0}
@@ -68,56 +73,24 @@
 <body>
   <a class="skip" href="#content">Skip to content</a>
   <div class="container">
-    <header>
-      <div class="brand">
-        <!-- DS monogram with half‑gear D -->
-        <svg class="logo" viewBox="0 0 120 120" role="img" aria-label="DS logo">
-          <defs>
-            <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
-              <stop offset="0" stop-color="#5b8def"/>
-              <stop offset="1" stop-color="#7ad3a8"/>
-            </linearGradient>
-          </defs>
-          <rect x="0" y="0" width="120" height="120" rx="24" fill="#ffffff" stroke="#e5e7eb"/>
-          <!-- Half gear forming the D spine -->
-          <g transform="translate(18,18)">
-            <circle cx="30" cy="42" r="26" fill="none" stroke="url(#g)" stroke-width="12" stroke-dasharray="20 10"/>
-            <!-- D bowl -->
-            <path d="M42 12 h18 a30 30 0 0 1 0 60 H42 Z" fill="url(#g)" opacity=".9"/>
-            <!-- S letter -->
-            <path d="M26 20c10-8 26-6 26 5 0 18-42 10-42 28 0 12 24 14 38 4" fill="none" stroke="#14213d" stroke-width="6" stroke-linecap="round"/>
-          </g>
-        </svg>
-        <strong>Daya Silverstein</strong>
-      </div>
-      <nav aria-label="primary">
-        <a href="#projects">Projects</a>
-        <a href="#skills">Skills</a>
-        <a href="#experience">Experience</a>
-        <a href="#contact">Contact</a>
-      </nav>
-    </header>
 
     <main id="content">
       <section class="hero">
         <div class="fade">
           <span class="badge">Mechanical Engineering student at Queen's</span>
           <h1>Hello, I’m Daya.</h1>
-          <p class="subtitle">I’m a second‑year Mechanical Engineering student focused on sustainable design, HVAC systems, and FEA simulation. I’m building hands‑on projects and tools that move from concept to working prototypes.</p>
+          <!-- rewritten to be personal & concise -->
+          <p class="subtitle">I’m a second‑year mechanical engineering student. My passion lies in turning rough ideas into working things—clean‑water builds, simple robots, and tools that make CAD feel automatic. I care about useful, reliable design more than buzzwords.</p>
           <div class="cta">
-            <a class="btn primary" href="#projects" aria-label="View projects">View Projects</a>
+            <a class="btn" href="#projects" aria-label="View projects">View Projects</a>
             <a class="btn" href="mailto:daya.silverstein@queensu.ca" aria-label="Email Daya">Email me</a>
             <a class="btn" href="assets/Resume_Daya_Silverstein.pdf" aria-disabled="true" aria-label="Resume coming soon">Download Resume (soon)</a>
           </div>
-          <div class="chips" style="margin-top:14px">
-            <span class="chip">Internship‑ready</span>
-            <span class="chip">No tracking • privacy‑friendly</span>
-            <span class="chip">Static • fast</span>
-          </div>
+          <!-- removed "Internship-ready / No tracking / Static fast" chips per request -->
         </div>
         <div class="fade fade2">
           <div class="card" aria-label="About me highlights">
-            <h2 style="margin-top:0">Snapshot</h2>
+            <h2 style="margin-top:0">At a glance</h2>
             <ul class="clean">
               <li>Interests: Sustainable design, HVAC, FEA simulation</li>
               <li>Strengths: Assembly coordination, CAD modeling, early prototyping</li>
@@ -139,8 +112,8 @@
         <div class="grid cards">
           <!-- Project 1 -->
           <article class="card">
-            <div class="thumb" aria-hidden="true">Water Filtration + Alum</div>
-            <h3 style="margin:12px 0 6px">Compact Water Filtration System (Alum Coagulation)</h3>
+            <div class="thumb water" aria-hidden="true">Water Filtration System</div>
+            <h3 style="margin:12px 0 6px">Water Filtration System</h3>
             <p class="subtitle">Designed and manufactured the mixing assembly; coordinated overall assembly and Arduino timing.</p>
             <ul class="clean">
               <li><strong>Problem:</strong> Produce potable water from dirty input in a single, compact system.</li>
@@ -156,7 +129,7 @@
 
           <!-- Project 2 -->
           <article class="card">
-            <div class="thumb" aria-hidden="true">Path Planning</div>
+            <div class="thumb path" aria-hidden="true">Path‑Planning</div>
             <h3 style="margin:12px 0 6px">Autonomous Path‑Planning for Warehouse Robots</h3>
             <p class="subtitle">A* path planning and MATLAB simulation to navigate checkpoints while avoiding obstacles.</p>
             <ul class="clean">
@@ -172,8 +145,8 @@
 
           <!-- Project 3 -->
           <article class="card">
-            <div class="thumb" aria-hidden="true">Fusion Add‑in</div>
-            <h3 style="margin:12px 0 6px">AI‑Powered Fusion 360 Assembly Generator</h3>
+            <div class="thumb cad" aria-hidden="true">Fusion Assembly Generator</div>
+            <h3 style="margin:12px 0 6px">Fusion Assembly Generator</h3>
             <p class="subtitle">Converts natural‑language prompts into Fusion 360 scripts that generate mechanical assemblies.</p>
             <ul class="clean">
               <li><strong>Problem:</strong> Bridge vague design intents and executable CAD by auto‑generating Fusion scripts.</li>
@@ -251,7 +224,7 @@
     </main>
 
     <footer>
-      <div>© <span id="y"></span> Daya Silverstein • Built with static HTML/CSS/JS — no cookies, no tracking.</div>
+      <div>© <span id="y"></span> Daya Silverstein • Built with static HTML/CSS/JS.</div>
     </footer>
   </div>
 
