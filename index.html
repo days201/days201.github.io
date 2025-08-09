@@ -11,7 +11,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
   <style>
     :root{
-      /* Light theme */
       --bg: #f7f9fb;
       --card: #ffffff;
       --ink: #14213d;
@@ -22,24 +21,6 @@
       --ring: rgba(91,141,239,.35);
       --radius: 18px;
       --shadow: 0 8px 30px rgba(20,33,61,.07);
-      
-      /* Timing variables */
-      --ease-out: cubic-bezier(.16,.84,.44,1);
-      --duration-fast: 120ms;
-      --duration-normal: 200ms;
-    }
-    
-    :root[data-theme='dark']{
-      /* Dark theme overrides */
-      --bg: #0f1624;
-      --card: #182335;
-      --ink: #f1f5f9;
-      --muted: #94a3b8;
-      --brand: #5b8def;
-      --accent: #7ad3a8;
-      --accent2: #f7b267;
-      --ring: rgba(91,141,239,.35);
-      --shadow: 0 8px 30px rgba(0,0,0,.5);
     }
     *{box-sizing:border-box}
     html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
@@ -52,13 +33,11 @@
     h1{font-size:42px;line-height:1.05;margin:10px 0 8px}
     .subtitle{color:var(--muted);font-size:18px}
     .cta{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
-    .btn{display:inline-flex;align-items:center;gap:10px;background:var(--card);border:1px solid #e5e7eb;border-radius:14px;padding:10px 14px;font-weight:600;box-shadow:var(--shadow);color:var(--brand);transition:transform var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out)}
-    .btn:active{transform:scale(.97);box-shadow:0 4px 15px rgba(20,33,61,.15)}
-    .btn:focus-visible{outline:2px solid var(--ring);outline-offset:2px}
+    .btn{display:inline-flex;align-items:center;gap:10px;background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:10px 14px;font-weight:600;box-shadow:var(--shadow);color:var(--brand)}
     .btn[aria-disabled="true"]{opacity:.55;pointer-events:none}
     .grid{display:grid;gap:18px}
     .cards{grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
-    .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;border:1px solid #eef2f7;transition:transform var(--duration-normal) var(--ease-out), box-shadow var(--duration-normal) var(--ease-out}
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;border:1px solid #eef2f7;transition:transform .2s ease, box-shadow .2s ease}
     .card:hover{transform:translateY(-3px);box-shadow:0 10px 34px rgba(20,33,61,.10)}
     .thumb{
       width:100%;height:160px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;letter-spacing:.3px;text-transform:uppercase;
@@ -100,40 +79,7 @@
     ul.clean li{margin:10px 0;color:var(--muted)}
     footer{margin:36px 0 24px;color:var(--muted);font-size:14px}
     .chips{display:flex;flex-wrap:wrap;gap:8px}
-    .chip{background:var(--card);border:1px solid #e5e7eb;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:600;transition:transform var(--duration-fast) var(--ease-out), outline var(--duration-fast) var(--ease-out);position:relative}
-    .chip:hover, .chip:focus{transform:translateY(-2px);outline:2px solid var(--ring);outline-offset:1px}
-    .chip:focus-visible{outline:2px solid var(--ring);outline-offset:2px}
-    
-    /* Tooltip system */
-    .tooltip{
-      position:absolute;
-      bottom:calc(100% + 8px);
-      left:50%;
-      transform:translateX(-50%);
-      background:var(--ink);
-      color:var(--bg);
-      padding:6px 10px;
-      border-radius:6px;
-      font-size:11px;
-      white-space:nowrap;
-      opacity:0;
-      pointer-events:none;
-      transition:opacity var(--duration-fast) var(--ease-out);
-      z-index:1000;
-    }
-    .tooltip::after{
-      content:'';
-      position:absolute;
-      top:100%;
-      left:50%;
-      transform:translateX(-50%);
-      border:4px solid transparent;
-      border-top-color:var(--ink);
-    }
-    [data-tooltip]:hover .tooltip,
-    [data-tooltip]:focus .tooltip{
-      opacity:1;
-    }
+    .chip{background:#fff;border:1px solid #e5e7eb;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:600}
     .fade{opacity:0;transform:translateY(8px);animation:fade .6s ease forwards}
     .fade2{animation-delay:.12s}
     .fade3{animation-delay:.2s}
@@ -142,154 +88,11 @@
     /* accessibility helpers */
     .skip{position:absolute;left:-9999px;top:auto}
     .skip:focus{left:12px;top:12px;background:#fff;border:2px solid var(--brand);padding:8px;border-radius:8px}
-    /* scroll progress bar */
-    #scrollBar{
-      position:fixed;
-      top:0;
-      left:0;
-      height:4px;
-      background:var(--brand);
-      z-index:1000;
-      pointer-events:none;
-      transition:width var(--duration-fast) var(--ease-out);
-      width:0;
-    }
-    
-    /* theme toggle */
-    .theme-toggle{
-      position:fixed;
-      top:20px;
-      right:20px;
-      width:44px;
-      height:44px;
-      border-radius:50%;
-      background:var(--card);
-      border:1px solid #e5e7eb;
-      box-shadow:var(--shadow);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      cursor:pointer;
-      transition:transform var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);
-      z-index:1000;
-    }
-    .theme-toggle:hover{transform:scale(1.05)}
-    .theme-toggle:active{transform:scale(.95)}
-    .theme-toggle:focus-visible{outline:2px solid var(--ring);outline-offset:2px}
-    .theme-toggle svg{width:20px;height:20px;color:var(--ink)}
-    
-    /* section nav */
-    .section-nav{
-      position:fixed;
-      left:20px;
-      top:50%;
-      transform:translateY(-50%);
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      z-index:1000;
-    }
-    .nav-dot{
-      width:12px;
-      height:12px;
-      border-radius:50%;
-      background:transparent;
-      border:2px solid var(--muted);
-      cursor:pointer;
-      transition:all var(--duration-fast) var(--ease-out);
-      position:relative;
-    }
-    .nav-dot:hover, .nav-dot:focus{
-      border-color:var(--brand);
-      transform:scale(1.2);
-    }
-    .nav-dot:focus-visible{
-      outline:2px solid var(--ring);
-      outline-offset:2px;
-    }
-    .nav-dot.active{
-      background:var(--brand);
-      border-color:var(--brand);
-    }
-    
-    /* ambient background */
-    .ambient-bg{
-      position:fixed;
-      inset:0;
-      z-index:-1;
-      opacity:0.3;
-      background:radial-gradient(circle at 20% 80%, rgba(91,141,239,0.1) 0%, transparent 50%),
-                 radial-gradient(circle at 80% 20%, rgba(122,211,168,0.1) 0%, transparent 50%);
-      animation:ambientFloat 8s ease-in-out infinite alternate;
-    }
-    :root[data-theme='dark'] .ambient-bg{
-      background:radial-gradient(circle at 20% 80%, rgba(91,141,239,0.05) 0%, transparent 50%),
-                 radial-gradient(circle at 80% 20%, rgba(122,211,168,0.05) 0%, transparent 50%);
-    }
-    @keyframes ambientFloat{
-      from{transform:translateX(-10px) translateY(-5px)}
-      to{transform:translateX(10px) translateY(5px)}
-    }
-    
-    /* reduced motion overrides */
-    @media (prefers-reduced-motion: reduce){
-      .ambient-bg{animation:none !important}
-      * {transition-duration:0s !important}
-    }
-    html[data-anim='off'] .ambient-bg{animation:none !important}
-    html[data-anim='off'] * {transition-duration:0s !important}
-    
     /* responsive */
-    @media (max-width: 860px){
-      .hero{grid-template-columns:1fr}
-      .subtitle{font-size:16px}
-      .section-nav{display:none}
-      .theme-toggle{bottom:20px;top:auto}
-    }
+    @media (max-width: 860px){.hero{grid-template-columns:1fr}.subtitle{font-size:16px}}
   </style>
 </head>
-<noscript>
-  <style>
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #0f1624;
-        --card: #182335;
-        --ink: #f1f5f9;
-        --muted: #94a3b8;
-        --shadow: 0 8px 30px rgba(0,0,0,.5);
-      }
-    }
-    .theme-toggle { display: none; }
-  </style>
-</noscript>
 <body>
-  <div id="scrollBar"></div>
-  <div class="ambient-bg"></div>
-  
-  <button class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false">
-    <svg class="sun-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
-    </svg>
-    <svg class="moon-icon" style="display:none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
-    </svg>
-  </button>
-  
-  <nav class="section-nav" aria-label="Section navigation">
-    <a href="#projects" class="nav-dot" aria-label="Projects" data-tooltip="Projects">
-      <div class="tooltip">Projects</div>
-    </a>
-    <a href="#skills" class="nav-dot" aria-label="Skills" data-tooltip="Skills">
-      <div class="tooltip">Skills</div>
-    </a>
-    <a href="#experience" class="nav-dot" aria-label="Experience" data-tooltip="Experience">
-      <div class="tooltip">Experience</div>
-    </a>
-    <a href="#contact" class="nav-dot" aria-label="Contact" data-tooltip="Contact">
-      <div class="tooltip">Contact</div>
-    </a>
-  </nav>
-
   <a class="skip" href="#content">Skip to content</a>
   <div class="container">
 
@@ -316,10 +119,7 @@
               <li>Looking for: Engineering internships and project teams</li>
             </ul>
             <div class="chips" style="margin-top:12px">
-              <span class="chip" data-tooltip="Used in: Assembly Generator" aria-describedby="fusion-tooltip">
-                Fusion 360
-                <div class="tooltip" role="tooltip" id="fusion-tooltip">Used in: Assembly Generator</div>
-              </span>
+              <span class="chip">Fusion 360</span>
               <span class="chip">SolidWorks</span>
               <span class="chip">MATLAB</span>
               <span class="chip">Python</span>
@@ -451,130 +251,16 @@
   </div>
 
   <script>
-    // ---- Initial setup and theme detection ----
-    const html = document.documentElement;
-    const themeToggle = document.querySelector('.theme-toggle');
-    const sunIcon = document.querySelector('.sun-icon');
-    const moonIcon = document.querySelector('.moon-icon');
-    const scrollBar = document.getElementById('scrollBar');
-    const navDots = document.querySelectorAll('.nav-dot');
-    
-    // Initialize theme
-    function initTheme() {
-      const saved = localStorage.getItem('theme');
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const theme = saved || (prefersDark ? 'dark' : 'light');
-      setTheme(theme);
-    }
-    
-    function setTheme(theme) {
-      html.setAttribute('data-theme', theme);
-      localStorage.setItem('theme', theme);
-      themeToggle.setAttribute('aria-pressed', theme === 'dark');
-      
-      if (theme === 'dark') {
-        sunIcon.style.display = 'none';
-        moonIcon.style.display = 'block';
-      } else {
-        sunIcon.style.display = 'block';
-        moonIcon.style.display = 'none';
-      }
-    }
-    
-    // Theme toggle functionality
-    themeToggle.addEventListener('click', () => {
-      const current = html.getAttribute('data-theme');
-      setTheme(current === 'dark' ? 'light' : 'dark');
-    });
-    
-    // ---- Scroll progress bar ----
-    function updateScrollProgress() {
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = Math.min(scrollTop / scrollHeight, 1);
-      scrollBar.style.width = `${progress * 100}%`;
-    }
-    
-    // ---- Section navigation (scroll spy) ----
-    const sections = ['projects', 'skills', 'experience', 'contact'];
-    const sectionElements = sections.map(id => document.getElementById(id));
-    
-    function updateActiveSection() {
-      const scrollTop = window.pageYOffset + window.innerHeight * 0.5;
-      
-      let activeIndex = 0;
-      sectionElements.forEach((section, index) => {
-        if (section && section.offsetTop <= scrollTop) {
-          activeIndex = index;
-        }
-      });
-      
-      navDots.forEach((dot, index) => {
-        dot.classList.toggle('active', index === activeIndex);
-      });
-    }
-    
-    // Smooth scroll for nav dots (respect reduced motion)
-    navDots.forEach((dot, index) => {
-      dot.addEventListener('click', (e) => {
-        e.preventDefault();
-        const target = sectionElements[index];
-        if (target) {
-          const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches || 
-                              html.getAttribute('data-anim') === 'off';
-          
-          if (reduceMotion) {
-            target.scrollIntoView();
-          } else {
-            target.scrollIntoView({ behavior: 'smooth' });
-          }
-        }
-      });
-    });
-    
-    // ---- Animation control for reduced motion ----
-    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
-    function handleMotion(e) {
-      if (e.matches) {
-        html.setAttribute('data-anim', 'off');
-        // Disable fade animations
-        document.querySelectorAll('.fade,.fade2,.fade3,.fade4').forEach(el => {
-          el.style.animation = 'none';
-          el.style.opacity = 1;
-          el.style.transform = 'none';
-        });
-      } else {
-        html.removeAttribute('data-anim');
-      }
-    }
-    
-    // Initial check for reduced motion
-    handleMotion(media);
-    media.addEventListener('change', handleMotion);
-    
-    // ---- Scroll event listeners (throttled) ----
-    let ticking = false;
-    function handleScroll() {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          updateScrollProgress();
-          updateActiveSection();
-          ticking = false;
-        });
-        ticking = true;
-      }
-    }
-    
-    // ---- Event listeners ----
-    window.addEventListener('scroll', handleScroll);
-    window.addEventListener('resize', handleScroll);
-    
-    // ---- Current year ----
+    // current year
     document.getElementById('y').textContent = new Date().getFullYear();
-    
-    // ---- Initialize everything ----
-    initTheme();
-    handleScroll(); // Initial call for progress and active section
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (media.matches) {
+      document.querySelectorAll('.fade,.fade2,.fade3,.fade4').forEach(el=>{
+        el.style.animation = 'none';
+        el.style.opacity = 1;
+        el.style.transform = 'none';
+      });
+    }
 
     // ---- Subtle Dijkstra-style split path animation for Path‑Planning tile ----
     (function(){
@@ -590,7 +276,7 @@
         canvas.setAttribute('aria-hidden','true');
         tile.appendChild(canvas);
 
-        let w=0,h=0, dpr=1, running = true;
+        let w=0,h=0, dpr=1, running = true; // always run
 
         function resize(){
           const rect = tile.getBoundingClientRect();
@@ -719,36 +405,16 @@
 
         let raf=0;
         function loop(){
-          // Check if animations should be stopped
-          const shouldStop = window.matchMedia('(prefers-reduced-motion: reduce)').matches || 
-                           html.getAttribute('data-anim') === 'off';
-          if (shouldStop) {
-            running = false;
-            ctx.clearRect(0,0,w,h);
-            return;
-          }
-          
           if (!running) return;
           draw();
           raf = requestAnimationFrame(loop);
         }
 
         resize();
-        loop();
+        loop(); // start regardless of prefers-reduced-motion
 
         window.addEventListener('resize', resize);
-        
-        // Listen for animation state changes
-        media.addEventListener('change', () => {
-          const shouldStop = media.matches || html.getAttribute('data-anim') === 'off';
-          if (shouldStop && running) {
-            running = false;
-            ctx.clearRect(0,0,w,h);
-          } else if (!shouldStop && !running) {
-            running = true;
-            loop();
-          }
-        });
+        // media.addEventListener?.('change', handleMotion); // disabled on purpose
       });
     })();
   </script>
