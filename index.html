@@ -521,7 +521,7 @@
     // Path tile animation (subtle)
     (function(){
       const tiles = document.querySelectorAll('.thumb.path');
-      if (!tiles.length) return;
+      if (!tiles.length || mediaReduce.matches) return;
       tiles.forEach(tile => {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
@@ -606,7 +606,7 @@
     // Water tile animation (flowing water)
     (function(){
       const tiles = document.querySelectorAll('.thumb.water');
-      if (!tiles.length) return;
+      if (!tiles.length || mediaReduce.matches) return;
       tiles.forEach(tile => {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
@@ -678,7 +678,7 @@
     // CAD gear animation
     (function(){
       const tiles = document.querySelectorAll('.thumb.cad');
-      if (!tiles.length) return;
+      if (!tiles.length || mediaReduce.matches) return;
       tiles.forEach(tile => {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
