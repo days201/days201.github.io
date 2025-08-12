@@ -19,6 +19,9 @@
   <meta property="og:image" content="/assets/og-cover.png" />
   <meta name="twitter:card" content="summary_large_image" />
 
+  <!-- Model Viewer for 3D models -->
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
   <style>
     :root{
       --bg: #f8fafc;
@@ -236,6 +239,9 @@
       .theme-toggle{top:16px;right:16px;padding:8px 12px}
     }
 
+    /* Model Viewer Styling */
+    model-viewer { background: var(--card, #0f0f10); }
+
     /* Reduced motion (kept for UI flourishes, but project canvases will still animate) */
     @media (prefers-reduced-motion: reduce){
       .card:hover,.btn:hover{transform:none !important}
@@ -265,7 +271,7 @@
           <h1>Hello, I'm Daya.</h1>
           <p class="subtitle">I'm a second-year Mechanical Engineering student passionate about creating sustainable designs that maximize efficiency, performance, and turn innovative ideas into practical solutions.</p>
           <div class="cta">
-            <a class="btn magnet" href="#projects" aria-label="View projects">View Projects</a>
+            <a class="btn magnet" href="#work" aria-label="View interactive 3D work">View Work</a>
             <a class="btn magnet" href="mailto:daya.silverstein@queensu.ca" aria-label="Email Daya">Email me</a>
             <a class="btn primary" href="assets/DayasResume.pdf" download="Daya_Silverstein_Resume.pdf" aria-label="Download Resume">Download Resume</a>
           </div>
@@ -331,6 +337,75 @@
             <div class="chips"><span class="chip">Python</span><span class="chip">Fusion API</span><span class="chip">AI Integration</span><span class="chip">CAD Automation</span></div>
             <div style="margin-top:12px"><a href="https://github.com/days201/Fusion_Assembly_Generator" target="_blank" rel="noopener">View repository →</a></div>
           </article>
+        </div>
+      </section>
+
+      <!-- View My Work -->
+      <section id="work" class="section reveal">
+        <h2>View My Work</h2>
+        <p class="subtitle">Interactive 3D assemblies — rotate, zoom, inspect.</p>
+        <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px">
+          
+          <article class="card tilt reveal">
+            <model-viewer
+              src="assets/models/mixing_assembly.glb"
+              alt="Water filtration mixing assembly 3D model with peristaltic pump and DC motor components"
+              camera-controls
+              touch-action="pan-y"
+              shadow-intensity="0.6"
+              exposure="0.9"
+              style="width:100%;height:360px;border-radius:16px;overflow:hidden;"
+              reveal="interaction">
+            </model-viewer>
+            <h3 style="margin:12px 0 6px">Mixing Assembly</h3>
+            <p class="subtitle">Interactive 3D model of the water filtration mixing system with peristaltic pump and DC motor assembly.</p>
+            <div class="chips" style="margin-top:12px">
+              <span class="chip">3D Model</span>
+              <span class="chip">Assembly</span>
+              <span class="chip">Mixing System</span>
+            </div>
+          </article>
+
+          <article class="card tilt reveal">
+            <model-viewer
+              src="assets/models/gearbox.glb"
+              alt="Compact mechanical gearbox 3D model showing gear train and housing assembly"
+              camera-controls
+              touch-action="pan-y"
+              shadow-intensity="0.6"
+              exposure="0.9"
+              style="width:100%;height:360px;border-radius:16px;overflow:hidden;"
+              reveal="interaction">
+            </model-viewer>
+            <h3 style="margin:12px 0 6px">Compact Gearbox</h3>
+            <p class="subtitle">Detailed 3D gearbox model showcasing mechanical gear train design and precision engineering.</p>
+            <div class="chips" style="margin-top:12px">
+              <span class="chip">3D Model</span>
+              <span class="chip">Gears</span>
+              <span class="chip">Mechanism</span>
+            </div>
+          </article>
+
+          <article class="card tilt reveal">
+            <model-viewer
+              src="assets/models/robot_path_demo.glb"
+              alt="Robot path planning demonstration 3D model with navigation routes and obstacle avoidance"
+              camera-controls
+              touch-action="pan-y"
+              shadow-intensity="0.6"
+              exposure="0.9"
+              style="width:100%;height:360px;border-radius:16px;overflow:hidden;"
+              reveal="interaction">
+            </model-viewer>
+            <h3 style="margin:12px 0 6px">Robot Path Demo</h3>
+            <p class="subtitle">3D visualization of autonomous robot path planning system with A* algorithm implementation.</p>
+            <div class="chips" style="margin-top:12px">
+              <span class="chip">3D Model</span>
+              <span class="chip">Robotics</span>
+              <span class="chip">Path Planning</span>
+            </div>
+          </article>
+
         </div>
       </section>
 
