@@ -1,32 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" type="image/png" href="favicon.png?v=1">
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Daya Silverstein — Mechanical Engineering @ Queen's University</title>
   <meta name="description" content="Portfolio of Daya Silverstein, Mechanical Engineering student at Queen's University. Projects in sustainable design, HVAC interest, FEA simulation, and CAD." />
+  <link rel="icon" type="image/png" href="favicon.png?v=1">
+
+  <!-- Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+  <!-- Open Graph / Twitter for rich previews -->
+  <meta property="og:title" content="Daya Silverstein — Mechanical Engineering" />
+  <meta property="og:description" content="Sustainable design, CAD automation, and hands‑on builds." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/assets/og-cover.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+
   <style>
     :root{
       --bg: #f7f9fb;
       --card: #ffffff;
-      --ink: #14213d;
+      --ink: #111827; /* slightly darker ink for contrast */
       --muted: #4b5563;
       --brand: #5b8def;
       --accent: #7ad3a8;
       --accent2:#f7b267;
-      --ring: rgba(91,141,239,.35);
-      --radius: 18px;
-      --shadow: 0 8px 30px rgba(20,33,61,.07);
+      --ring: rgba(91,141,239,.30);
+      --radius: 16px;
+      --shadow: 0 8px 30px rgba(17,24,39,.06);
       --hover: translateY(-3px);
       --hero-glow-x: 50%;
       --hero-glow-y: 50%;
+      --border: #e5e7eb;
+      --chip-bg:#fff;
+    }
+    @media (prefers-color-scheme: dark){
+      :root{
+        --bg:#0b1220;
+        --card:#0f172a;
+        --ink:#e5e7eb;
+        --muted:#94a3b8;
+        --brand:#7aa2ff;
+        --accent:#66d2a3;
+        --accent2:#f7b267;
+        --ring: rgba(122,162,255,.25);
+        --shadow: 0 12px 40px rgba(0,0,0,.45);
+        --border:#1f2a44;
+        --chip-bg:#0b1220;
+      }
     }
 
-    /* Global resets + layout */
+    /* Global */
     *{box-sizing:border-box}
     html, body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;min-height:100%;width:100%;overflow-x:hidden}
     html{scroll-behavior:smooth}
@@ -35,67 +62,84 @@
     a{color:var(--brand);text-decoration:none;background-image:linear-gradient(currentColor,currentColor);background-size:0% 2px;background-repeat:no-repeat;background-position:0 100%;transition:background-size .25s ease}
     a:hover{background-size:100% 2px}
 
-    .container{max-width:1000px;margin:0 auto;padding:clamp(16px,3vw,24px)}
+    .container{max-width:1100px;margin:0 auto;padding:clamp(16px,3vw,28px)}
+
+    /* Top nav */
+    header.site{
+      position:sticky;top:0;z-index:20;backdrop-filter:saturate(1.1) blur(8px);
+      background:color-mix(in srgb, var(--bg) 88%, transparent);
+      border-bottom:1px solid var(--border);
+    }
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:16px;max-width:1100px;margin:0 auto;padding:10px 16px}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.2px}
+    .brand .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--brand),var(--accent))}
+    .nav a.link{font-weight:600;color:var(--ink);opacity:.9}
+    .spacer{flex:1}
+
+    .mode{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:999px;padding:6px 10px;background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
+    .mode button{appearance:none;border:0;background:transparent;color:inherit;font:inherit;cursor:pointer;padding:0 2px}
 
     /* Hero */
-    .hero{position:relative;display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:center;margin:24px 0;overflow:visible;border-radius:24px}
+    .hero{position:relative;display:grid;grid-template-columns:1.1fr .9fr;gap:32px;align-items:center;margin:20px 0 8px}
     .hero::before{content:"";position:absolute;inset:-40%;background:radial-gradient(600px 400px at var(--hero-glow-x) var(--hero-glow-y), rgba(91,141,239,.10), transparent 60%);pointer-events:none;z-index:0;transition:opacity .2s ease}
 
-    .badge{display:inline-block;background:linear-gradient(135deg,var(--brand),var(--accent));color:#fff;padding:6px 12px;border-radius:999px;font-weight:600;font-size:12px;letter-spacing:.4px}
-    h1{font-size:42px;line-height:1.05;margin:10px 0 8px}
-    .subtitle{color:var(--muted);font-size:18px}
+    .badge{display:inline-block;background:linear-gradient(135deg,var(--brand),var(--accent));color:#fff;padding:6px 12px;border-radius:999px;font-weight:700;font-size:12px;letter-spacing:.4px}
+    h1{font-size:clamp(34px,4.6vw,48px);line-height:1.05;margin:10px 0 10px}
+    .subtitle{color:var(--muted);font-size:clamp(16px,1.8vw,18px)}
 
     .cta{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
-    .btn{position:relative;isolation:isolate;display:inline-flex;align-items:center;gap:10px;background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:10px 14px;font-weight:600;box-shadow:var(--shadow);color:var(--brand);transition:transform .15s ease, box-shadow .15s ease}
-    .btn::after{content:"";position:absolute;inset:-2px;border-radius:16px;box-shadow:0 0 0 0 rgba(91,141,239,.25);opacity:0;transition:box-shadow .25s ease, opacity .25s ease;z-index:-1}
+    .btn{position:relative;isolation:isolate;display:inline-flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:10px 14px;font-weight:700;box-shadow:var(--shadow);color:var(--brand);transition:transform .15s ease, box-shadow .15s ease}
+    .btn::after{content:"";position:absolute;inset:-2px;border-radius:16px;box-shadow:0 0 0 0 var(--ring);opacity:0;transition:box-shadow .25s ease, opacity .25s ease;z-index:-1}
     .btn:hover{transform:translateY(-2px)}
-    .btn:hover::after{opacity:1;box-shadow:0 0 0 6px rgba(91,141,239,.15)}
+    .btn:hover::after{opacity:1;box-shadow:0 0 0 6px var(--ring)}
     .btn[aria-disabled="true"]{opacity:.55;pointer-events:none}
+    .btn.primary{background:linear-gradient(135deg,var(--brand),var(--accent));color:#fff;border-color:transparent}
+
+    /* Sections */
+    .section{margin:44px 0}
+    .section h2{font-size:28px;margin:0 0 12px}
 
     /* Cards */
     .grid{display:grid;gap:18px}
-    .cards{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
-    .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;border:1px solid #eef2f7;transition:transform .2s ease, box-shadow .2s ease}
-    .card:hover{transform:var(--hover);box-shadow:0 10px 34px rgba(20,33,61,.10)}
+    .cards{grid-template-columns:repeat(auto-fit,minmax(290px,1fr))}
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;border:1px solid var(--border);transition:transform .2s ease, box-shadow .2s ease}
+    .card:hover{transform:var(--hover);box-shadow:0 12px 40px rgba(0,0,0,.10)}
 
-    /* micro tilt */
+    /* Micro tilt */
     .tilt{perspective:700px;transform-style:preserve-3d}
     .tilt:hover{transform:perspective(700px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))}
 
-    .thumb{width:100%;height:160px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;letter-spacing:.3px;text-transform:uppercase;position:relative;overflow:hidden;text-align:center;padding:0 10px;z-index:0}
+    /* Thumbs */
+    .thumb{width:100%;height:164px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;letter-spacing:.3px;text-transform:uppercase;position:relative;overflow:hidden;text-align:center;padding:0 10px;z-index:0}
     .thumb::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(70%,460px);height:34px;background:rgba(255,255,255,.12);border-radius:999px;z-index:0;pointer-events:none;mix-blend-mode:screen}
     .thumb > *{position:relative;z-index:1}
 
-    /* themed project thumbnails */
+    /* Themed thumbs */
     .thumb.water{background:radial-gradient(60% 100% at 20% 0%, rgba(255,255,255,.25) 0 60%, transparent 61%),radial-gradient(40% 80% at 90% 30%, rgba(255,255,255,.18) 0 60%, transparent 61%),linear-gradient(135deg,#7dc9ff,#5b8def 40%, #214e9a)}
     .thumb.path{background:repeating-linear-gradient(45deg, rgba(255,255,255,.08) 0 10px, rgba(255,255,255,0) 10px 20px),linear-gradient(135deg,#0b1020,#3b485a)}
     .thumb.cad{background:radial-gradient(200px 200px at 85% 20%, rgba(255,255,255,.35) 0 120px, transparent 121px),linear-gradient(135deg,#0ea5e9,#5b8def)}
 
-    .section{margin:36px 0}
-    .section h2{font-size:28px;margin:0 0 12px}
+    /* Lists */
     ul.clean{list-style:none;padding:0;margin:0}
     ul.clean li{margin:10px 0;color:var(--muted)}
-    footer{margin:36px 0 24px;color:var(--muted);font-size:14px}
+
+    /* Chips */
     .chips{display:flex;flex-wrap:wrap;gap:8px}
-    .chip{background:#fff;border:1px solid #e5e7eb;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:600;transition:transform .12s ease}
+    .chip{background:var(--chip-bg);border:1px solid var(--border);border-radius:999px;padding:6px 10px;font-size:12px;font-weight:700;transition:transform .12s ease}
     .chip:hover{transform:translateY(-1px)}
 
-    /* reveal-on-scroll */
-    .reveal{opacity:0;transform:translateY(8px);transition:opacity .5s ease, transform .5s ease}
-    .reveal.in{opacity:1;transform:none}
+    /* Footer */
+    footer{margin:40px 0 24px;color:var(--muted);font-size:14px;text-align:center}
 
-    /* accessibility helpers */
+    /* Accessibility helpers */
     .skip{position:absolute;left:-9999px;top:auto}
-    .skip:focus{left:12px;top:12px;background:#fff;border:2px solid var(--brand);padding:8px;border-radius:8px}
+    .skip:focus{left:12px;top:12px;background:var(--card);border:2px solid var(--brand);padding:8px;border-radius:8px}
 
-    /* responsive */
-    @media (max-width: 860px){
-      .hero{grid-template-columns:1fr}
-      h1{font-size:34px}
-      .subtitle{font-size:16px}
-    }
+    /* Responsive */
+    @media (max-width: 900px){ .hero{grid-template-columns:1fr} }
+    @media (max-width: 420px){ .cta .btn{flex:1} }
 
-    /* reduced motion */
+    /* Reduced motion */
     @media (prefers-reduced-motion: reduce){
       *{animation:none !important; transition:none !important}
       .card:hover,.btn:hover{transform:none !important}
@@ -105,14 +149,34 @@
 </head>
 <body>
   <a class="skip" href="#content">Skip to content</a>
-  <div class="container">
 
+  <!-- Sticky top nav -->
+  <header class="site">
+    <nav class="nav">
+      <div class="brand" aria-label="Home">
+        <span class="dot" aria-hidden="true"></span>
+        <span>Daya&nbsp;Silverstein</span>
+      </div>
+      <div class="spacer"></div>
+      <a class="link" href="#projects">Projects</a>
+      <a class="link" href="#skills">Skills</a>
+      <a class="link" href="#contact">Contact</a>
+      <a class="btn primary" href="assets/DayaSResume.pdf" download="Daya_Silverstein_Resume.pdf">Resume</a>
+      <span class="mode" title="Toggle theme">
+        <button id="modeBtn" aria-label="Toggle dark mode">🌓</button>
+      </span>
+    </nav>
+  </header>
+
+  <div class="container">
     <main id="content">
+
+      <!-- Hero -->
       <section class="hero reveal">
         <div class="fade">
           <span class="badge">Mechanical Engineering student at Queen's</span>
           <h1>Hello, I’m Daya.</h1>
-          <p class="subtitle">I’m a second-year Mechanical Engineering student. My passion lies in creating sustainable designs that maximize efficiency, performance, and turn ideas into practical solutions.</p>
+          <p class="subtitle">I’m a second‑year Mechanical Engineering student. My focus is sustainable design: turning ideas into robust, efficient, build‑ready solutions.</p>
           <div class="cta">
             <a class="btn magnet" href="#projects" aria-label="View projects">View Projects</a>
             <a class="btn magnet" href="mailto:daya.silverstein@queensu.ca" aria-label="Email Daya">Email me</a>
@@ -138,10 +202,10 @@
         </div>
       </section>
 
+      <!-- Projects -->
       <section id="projects" class="section reveal">
         <h2>Featured Projects</h2>
         <div class="grid cards">
-          <!-- Project 1 -->
           <article class="card tilt reveal">
             <div class="thumb water" aria-hidden="true">Water Filtration System</div>
             <h3 style="margin:12px 0 6px">Water Filtration System</h3>
@@ -153,12 +217,9 @@
               <li><strong>Status:</strong> Finished • <span aria-label="year">2025</span></li>
             </ul>
             <div class="chips"><span class="chip">Arduino</span><span class="chip">3D printing</span><span class="chip">Peristaltic pump</span></div>
-            <div style="margin-top:10px">
-              <a href="#" aria-disabled="true">Demo (YouTube soon)</a>
-            </div>
+            <div style="margin-top:10px"><a href="#" aria-disabled="true">Demo (YouTube soon)</a></div>
           </article>
 
-          <!-- Project 2 -->
           <article class="card tilt reveal">
             <div class="thumb path" aria-hidden="true">Path‑Planning</div>
             <h3 style="margin:12px 0 6px">Autonomous Path‑Planning for Warehouse Robots</h3>
@@ -169,12 +230,9 @@
               <li><strong>Status:</strong> Finished • <span aria-label="year">2025</span></li>
             </ul>
             <div class="chips"><span class="chip">A*</span><span class="chip">MATLAB</span></div>
-            <div style="margin-top:10px">
-              <a href="https://github.com/mohammedz06/Autonomous-Path-Finding" target="_blank" rel="noopener">View repository</a>
-            </div>
+            <div style="margin-top:10px"><a href="https://github.com/mohammedz06/Autonomous-Path-Finding" target="_blank" rel="noopener">View repository</a></div>
           </article>
 
-          <!-- Project 3 -->
           <article class="card tilt reveal">
             <div class="thumb cad" aria-hidden="true">Fusion Assembly Generator</div>
             <h3 style="margin:12px 0 6px">Fusion Assembly Generator</h3>
@@ -185,13 +243,12 @@
               <li><strong>Status:</strong> Ongoing • <span aria-label="year">2025</span></li>
             </ul>
             <div class="chips"><span class="chip">Python</span><span class="chip">Fusion API</span></div>
-            <div style="margin-top:10px">
-              <a href="https://github.com/days201/Fusion_Assembly_Generator" target="_blank" rel="noopener">View repository</a>
-            </div>
+            <div style="margin-top:10px"><a href="https://github.com/days201/Fusion_Assembly_Generator" target="_blank" rel="noopener">View repository</a></div>
           </article>
         </div>
       </section>
 
+      <!-- Skills -->
       <section id="skills" class="section reveal">
         <h2>Skills</h2>
         <div class="grid cards" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
@@ -227,6 +284,7 @@
         </div>
       </section>
 
+      <!-- Experience -->
       <section id="experience" class="section reveal">
         <h2>Experience & Leadership</h2>
         <article class="card tilt reveal">
@@ -238,6 +296,7 @@
         </article>
       </section>
 
+      <!-- Contact -->
       <section id="contact" class="section reveal">
         <h2>Contact</h2>
         <div class="card tilt reveal">
@@ -259,7 +318,14 @@
   </div>
 
   <script>
-    // current year
+    // Respect saved theme toggle
+    (function(){
+      const pref = localStorage.getItem('mode');
+      if(pref === 'dark') document.documentElement.style.colorScheme = 'dark';
+      if(pref === 'light') document.documentElement.style.colorScheme = 'light';
+    })();
+
+    // Year
     document.getElementById('y').textContent = new Date().getFullYear();
 
     const mediaReduce = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -313,7 +379,7 @@
       });
     });
 
-    // Subtle split-path animation for Path‑Planning tile
+    // Path tile animation (subtle)
     (function(){
       const tiles = document.querySelectorAll('.thumb.path');
       if (!tiles.length) return;
@@ -397,6 +463,15 @@
         window.addEventListener('resize', resize);
       });
     })();
+
+    // Dark mode toggle control
+    const btn = document.getElementById('modeBtn');
+    btn?.addEventListener('click', ()=>{
+      const cur = getComputedStyle(document.documentElement).colorScheme;
+      const next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.style.colorScheme = next;
+      localStorage.setItem('mode', next);
+    });
   </script>
 </body>
 </html>
