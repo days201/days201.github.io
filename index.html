@@ -109,8 +109,13 @@
 
     /* Thumbs */
     .thumb{width:100%;height:180px;border-radius:16px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;letter-spacing:.4px;text-transform:uppercase;position:relative;overflow:hidden;text-align:center;padding:0 16px;z-index:0;box-shadow:var(--shadow-lg)}
-    .thumb::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(60%,400px);height:25px;background:rgba(255,255,255,.08);border-radius:999px;z-index:0;pointer-events:none;mix-blend-mode:screen;backdrop-filter:blur(4px)}
+    /* remove the old centered highlight bar that obscured text */
+    .thumb::after{content:none}
     .thumb > *{position:relative;z-index:1;text-shadow:0 2px 10px rgba(0,0,0,.3)}
+
+    /* New precise text highlight that matches text width and stays thin */
+    .thumb .thumb-label{position:relative;display:inline-block;padding:0 .15em;z-index:1}
+    .thumb .thumb-label::after{content:"";position:absolute;left:0;right:0;bottom:.1em;height:.6em;border-radius:8px;background:rgba(255,255,255,.14);z-index:-1}
 
     /* Themed thumbs */
     .thumb.water{background:radial-gradient(60% 100% at 20% 0%, rgba(255,255,255,.3) 0 50%, transparent 51%),radial-gradient(40% 80% at 90% 30%, rgba(255,255,255,.2) 0 50%, transparent 51%),linear-gradient(135deg,#0ea5e9,var(--brand),var(--accent) 80%)}
@@ -181,108 +186,32 @@
     }
 
     /* Enhanced animations */
-    .fade{
-      opacity:0;
-      transform:translateY(20px);
-      transition:opacity .6s ease, transform .6s ease;
-    }
-    .fade.in{
-      opacity:1;
-      transform:translateY(0);
-    }
-    .fade2{
-      transition-delay:.2s;
-    }
-    .reveal{
-      opacity:0;
-      transform:translateY(30px);
-      transition:opacity .8s ease, transform .8s ease;
-    }
-    .reveal.in{
-      opacity:1;
-      transform:translateY(0);
-    }
+    .fade{opacity:0;transform:translateY(20px);transition:opacity .6s ease, transform .6s ease}
+    .fade.in{opacity:1;transform:translateY(0)}
+    .fade2{transition-delay:.2s}
+    .reveal{opacity:0;transform:translateY(30px);transition:opacity .8s ease, transform .8s ease}
+    .reveal.in{opacity:1;transform:translateY(0)}
 
     /* Enhanced hero section */
-    .hero::after{
-      content:"";
-      position:absolute;
-      top:0;
-      left:0;
-      right:0;
-      height:1px;
-      background:linear-gradient(90deg, transparent, var(--accent), transparent);
-      opacity:0.3;
-    }
+    .hero::after{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg, transparent, var(--accent), transparent);opacity:0.3}
 
     /* Enhanced card hover effects */
-    .card{
-      background:var(--glass);
-      backdrop-filter:saturate(1.1) blur(10px);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:24px;
-      border:1px solid var(--border-light);
-      transition:transform .3s ease, box-shadow .3s ease, border-color .3s ease, background .3s ease;
-      position:relative;
-      overflow:hidden;
-    }
-    .card::before{
-      content:"";
-      position:absolute;
-      top:0;
-      left:0;
-      right:0;
-      height:1px;
-      background:linear-gradient(90deg, transparent, var(--accent-light), transparent);
-      opacity:0;
-      transition:opacity .3s ease;
-    }
-    .card:hover{
-      transform:var(--hover);
-      box-shadow:var(--shadow-lg);
-      border-color:var(--accent);
-      background:rgba(255,255,255,.98);
-    }
-    .card:hover::before{
-      opacity:0.6;
-    }
+    .card{background:var(--glass);backdrop-filter:saturate(1.1) blur(10px);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px;border:1px solid var(--border-light);transition:transform .3s ease, box-shadow .3s ease, border-color .3s ease, background .3s ease;position:relative;overflow:hidden}
+    .card::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg, transparent, var(--accent-light), transparent);opacity:0;transition:opacity .3s ease}
+    .card:hover{transform:var(--hover);box-shadow:var(--shadow-lg);border-color:var(--accent);background:rgba(255,255,255,.98)}
+    .card:hover::before{opacity:0.6}
 
     /* Enhanced chip animations */
-    .chip{
-      background:var(--glass);
-      backdrop-filter:saturate(1.1) blur(8px);
-      border:1px solid var(--border-light);
-      border-radius:999px;
-      padding:8px 14px;
-      font-size:13px;
-      font-weight:600;
-      transition:transform .2s ease, border-color .2s ease, box-shadow .2s ease, background .2s ease;
-      text-decoration:none;
-      color:var(--muted);
-    }
-    .chip:hover{
-      transform:translateY(-2px);
-      border-color:var(--accent);
-      box-shadow:var(--shadow);
-      background:rgba(255,255,255,.95);
-      color:var(--brand);
-    }
+    .chip{background:var(--glass);backdrop-filter:saturate(1.1) blur(8px);border:1px solid var(--border-light);border-radius:999px;padding:8px 14px;font-size:13px;font-weight:600;transition:transform .2s ease, border-color .2s ease, box-shadow .2s ease, background .2s ease;text-decoration:none;color:var(--muted)}
+    .chip:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:var(--shadow);background:rgba(255,255,255,.95);color:var(--brand)}
 
     /* Accessibility helpers */
     .skip{position:absolute;left:-9999px;top:auto}
     .skip:focus{left:12px;top:12px;background:var(--card);border:2px solid var(--brand);padding:8px;border-radius:8px}
 
     /* Enhanced focus states */
-    a:focus-visible, button:focus-visible, .btn:focus-visible{
-      outline:2px solid var(--brand);
-      outline-offset:2px;
-      border-radius:8px;
-    }
-    .card:focus-within{
-      border-color:var(--accent);
-      box-shadow:var(--shadow-lg);
-    }
+    a:focus-visible, button:focus-visible, .btn:focus-visible{outline:2px solid var(--brand);outline-offset:2px;border-radius:8px}
+    .card:focus-within{border-color:var(--accent);box-shadow:var(--shadow-lg)}
 
     /* Responsive */
     @media (max-width: 900px){ .hero{grid-template-columns:1fr} }
@@ -344,7 +273,7 @@
         <h2>Featured Projects</h2>
         <div class="grid cards">
           <article class="card tilt reveal">
-            <div class="thumb water" aria-hidden="true">Water Filtration System</div>
+            <div class="thumb water" aria-hidden="true"><span class="thumb-label">Water Filtration System</span></div>
             <h3 style="margin:12px 0 6px">Water Filtration System</h3>
             <p class="subtitle">Designed and manufactured the mixing assembly; coordinated overall assembly and Arduino timing.</p>
             <ul class="clean">
@@ -358,7 +287,7 @@
           </article>
 
           <article class="card tilt reveal">
-            <div class="thumb path" aria-hidden="true">Path‑Planning</div>
+            <div class="thumb path" aria-hidden="true"><span class="thumb-label">Path‑Planning</span></div>
             <h3 style="margin:12px 0 6px">Autonomous Path‑Planning for Warehouse Robots</h3>
             <p class="subtitle">A* path planning and MATLAB simulation to navigate checkpoints while avoiding obstacles.</p>
             <ul class="clean">
@@ -371,7 +300,7 @@
           </article>
 
           <article class="card tilt reveal">
-            <div class="thumb cad" aria-hidden="true">Fusion Assembly Generator</div>
+            <div class="thumb cad" aria-hidden="true"><span class="thumb-label">Fusion Assembly Generator</span></div>
             <h3 style="margin:12px 0 6px">Fusion Assembly Generator</h3>
             <p class="subtitle">Converts natural‑language prompts into Fusion 360 scripts that generate mechanical assemblies.</p>
             <ul class="clean">
@@ -518,33 +447,35 @@
       });
     });
 
-    // Path tile animation (subtle)
+    // Helpers to mount a canvas on a tile
+    function mountCanvas(tile){
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.style.position = 'absolute';
+      canvas.style.inset = '0';
+      canvas.style.zIndex = '0';
+      canvas.setAttribute('aria-hidden','true');
+      tile.appendChild(canvas);
+      return {canvas, ctx};
+    }
+
+    // ===== Path tile animation =====
     (function(){
       const tiles = document.querySelectorAll('.thumb.path');
-      if (!tiles.length || mediaReduce.matches) return;
+      if (!tiles.length) return;
       tiles.forEach(tile => {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.style.position = 'absolute';
-        canvas.style.inset = '0';
-        canvas.style.zIndex = '0';
-        canvas.setAttribute('aria-hidden','true');
-        tile.appendChild(canvas);
-
+        const {canvas, ctx} = mountCanvas(tile);
         let w=0,h=0, dpr=1;
         function resize(){
           const rect = tile.getBoundingClientRect();
           w = Math.floor(rect.width);
           h = Math.floor(rect.height);
           dpr = Math.min(window.devicePixelRatio || 1, 2);
-          canvas.width = w * dpr;
-          canvas.height = h * dpr;
-          canvas.style.width = w + 'px';
-          canvas.style.height = h + 'px';
+          canvas.width = w * dpr; canvas.height = h * dpr;
+          canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
           ctx.setTransform(dpr,0,0,dpr,0,0);
           initGraph();
         }
-
         let nodes = [], edges = [], routes = [], particles = [];
         function initGraph(){
           nodes = []; edges = []; routes = []; particles = [];
@@ -575,8 +506,7 @@
             particles.push({ route: r.slice(), t: Math.random(), seg: 0, speed: 0.0015 + Math.random()*0.001, radius: 2 + Math.random()*1.5 });
           }
         }
-
-        function draw(){
+        function frame(drawParticles){
           ctx.clearRect(0,0,w,h);
           ctx.lineWidth = 1.5;
           edges.forEach(e=>{
@@ -587,6 +517,7 @@
             ctx.moveTo(A.x, A.y); ctx.quadraticCurveTo(mx, my, B.x, B.y); ctx.stroke();
           });
           nodes.forEach(nd=>{ ctx.beginPath(); ctx.fillStyle = 'rgba(255,255,255,0.18)'; ctx.arc(nd.x, nd.y, 2, 0, Math.PI*2); ctx.fill(); });
+          if (!drawParticles) return;
           particles.forEach(p=>{
             const a = nodes[p.route[p.seg]]; const b = nodes[p.route[p.seg+1]];
             const mx = (a.x+b.x)/2; const my = (a.y+b.y)/2 + (b.y-a.y)*0.15; const t = p.t;
@@ -594,56 +525,43 @@
             ctx.beginPath(); ctx.fillStyle = 'rgba(122,211,168,0.75)'; ctx.arc(x, y, p.radius, 0, Math.PI*2); ctx.fill();
             p.t += p.speed; if (p.t >= 1){ p.t = 0; p.seg++; if (p.seg >= p.route.length - 1){ p.seg = 0; p.route = routes[Math.floor(Math.random()*routes.length)].slice(); } }
           });
-          requestAnimationFrame(draw);
         }
-
+        function animate(){ frame(true); requestAnimationFrame(animate); }
+        function drawStatic(){ frame(false); }
         resize();
-        draw();
+        if (mediaReduce.matches){ drawStatic(); }
+        else { animate(); }
         window.addEventListener('resize', resize);
       });
     })();
 
-    // Water tile animation (flowing water)
+    // ===== Water tile animation =====
     (function(){
       const tiles = document.querySelectorAll('.thumb.water');
-      if (!tiles.length || mediaReduce.matches) return;
+      if (!tiles.length) return;
       tiles.forEach(tile => {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.style.position = 'absolute';
-        canvas.style.inset = '0';
-        canvas.style.zIndex = '0';
-        canvas.setAttribute('aria-hidden','true');
-        tile.appendChild(canvas);
-
+        const {canvas, ctx} = mountCanvas(tile);
         let w=0,h=0, dpr=1, time=0;
         function resize(){
           const rect = tile.getBoundingClientRect();
           w = Math.floor(rect.width);
           h = Math.floor(rect.height);
           dpr = Math.min(window.devicePixelRatio || 1, 2);
-          canvas.width = w * dpr;
-          canvas.height = h * dpr;
-          canvas.style.width = w + 'px';
-          canvas.style.height = h + 'px';
+          canvas.width = w * dpr; canvas.height = h * dpr;
+          canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
           ctx.setTransform(dpr,0,0,dpr,0,0);
         }
-
-        function draw(){
+        function drawFrame(animated){
           ctx.clearRect(0,0,w,h);
-          time += 0.02;
-          
-          // Create flowing water waves
+          if (animated) time += 0.02;
           const waves = 3;
           for(let i = 0; i < waves; i++){
             ctx.beginPath();
             ctx.strokeStyle = `rgba(255,255,255,${0.1 + i*0.05})`;
             ctx.lineWidth = 2 + i;
-            
             const offset = time + i * Math.PI / 2;
             const amplitude = 15 + i * 5;
             const frequency = 0.02 + i * 0.005;
-            
             ctx.moveTo(0, h/2);
             for(let x = 0; x <= w; x += 2){
               const y = h/2 + Math.sin(x * frequency + offset) * amplitude;
@@ -651,129 +569,73 @@
             }
             ctx.stroke();
           }
-          
-          // Add flowing water droplets
           const droplets = 6;
           for(let i = 0; i < droplets; i++){
-            const progress = (time * 0.5 + i * Math.PI / 3) % (Math.PI * 2);
+            const progress = ((animated ? time : 0.8) * 0.5 + i * Math.PI / 3) % (Math.PI * 2);
             const x = (progress / (Math.PI * 2)) * w;
             const y = h/2 + Math.sin(progress * 2) * 20;
             const size = 3 + Math.sin(progress * 3) * 2;
-            
-            ctx.beginPath();
-            ctx.fillStyle = 'rgba(255,255,255,0.4)';
-            ctx.arc(x, y, size, 0, Math.PI*2);
-            ctx.fill();
+            ctx.beginPath(); ctx.fillStyle = 'rgba(255,255,255,0.4)'; ctx.arc(x, y, size, 0, Math.PI*2); ctx.fill();
           }
-          
-          requestAnimationFrame(draw);
         }
-
+        function animate(){ drawFrame(true); requestAnimationFrame(animate); }
         resize();
-        draw();
+        if (mediaReduce.matches){ drawFrame(false); }
+        else { animate(); }
         window.addEventListener('resize', resize);
       });
     })();
 
-    // CAD gear animation
+    // ===== CAD gear animation =====
     (function(){
       const tiles = document.querySelectorAll('.thumb.cad');
-      if (!tiles.length || mediaReduce.matches) return;
+      if (!tiles.length) return;
       tiles.forEach(tile => {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.style.position = 'absolute';
-        canvas.style.inset = '0';
-        canvas.style.zIndex = '0';
-        canvas.setAttribute('aria-hidden','true');
-        tile.appendChild(canvas);
-
+        const {canvas, ctx} = mountCanvas(tile);
         let w=0,h=0, dpr=1, time=0;
         function resize(){
           const rect = tile.getBoundingClientRect();
           w = Math.floor(rect.width);
           h = Math.floor(rect.height);
           dpr = Math.min(window.devicePixelRatio || 1, 2);
-          canvas.width = w * dpr;
-          canvas.height = h * dpr;
-          canvas.style.width = w + 'px';
-          canvas.style.height = h + 'px';
+          canvas.width = w * dpr; canvas.height = h * dpr;
+          canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
           ctx.setTransform(dpr,0,0,dpr,0,0);
         }
-
         function drawGear(x, y, radius, teeth, rotation) {
-          ctx.save();
-          ctx.translate(x, y);
-          ctx.rotate(rotation);
-          
-          const innerRadius = radius * 0.7;
-          const toothHeight = radius * 0.3;
-          
+          ctx.save(); ctx.translate(x, y); ctx.rotate(rotation);
+          const innerRadius = radius * 0.7; const toothHeight = radius * 0.3;
           ctx.beginPath();
           for(let i = 0; i < teeth; i++){
             const angle1 = (i / teeth) * Math.PI * 2;
             const angle2 = ((i + 0.4) / teeth) * Math.PI * 2;
             const angle3 = ((i + 0.6) / teeth) * Math.PI * 2;
             const angle4 = ((i + 1) / teeth) * Math.PI * 2;
-            
-            const x1 = Math.cos(angle1) * radius;
-            const y1 = Math.sin(angle1) * radius;
-            const x2 = Math.cos(angle2) * (radius + toothHeight);
-            const y2 = Math.sin(angle2) * (radius + toothHeight);
-            const x3 = Math.cos(angle3) * (radius + toothHeight);
-            const y3 = Math.sin(angle3) * (radius + toothHeight);
-            const x4 = Math.cos(angle4) * radius;
-            const y4 = Math.sin(angle4) * radius;
-            
+            const x1 = Math.cos(angle1) * radius; const y1 = Math.sin(angle1) * radius;
+            const x2 = Math.cos(angle2) * (radius + toothHeight); const y2 = Math.sin(angle2) * (radius + toothHeight);
+            const x3 = Math.cos(angle3) * (radius + toothHeight); const y3 = Math.sin(angle3) * (radius + toothHeight);
+            const x4 = Math.cos(angle4) * radius; const y4 = Math.sin(angle4) * radius;
             if(i === 0) ctx.moveTo(x1, y1);
-            ctx.lineTo(x2, y2);
-            ctx.lineTo(x3, y3);
-            ctx.lineTo(x4, y4);
+            ctx.lineTo(x2, y2); ctx.lineTo(x3, y3); ctx.lineTo(x4, y4);
           }
-          ctx.closePath();
-          ctx.strokeStyle = 'rgba(255,255,255,0.15)';
-          ctx.lineWidth = 1.5;
-          ctx.stroke();
-          
-          // Inner circle
-          ctx.beginPath();
-          ctx.arc(0, 0, innerRadius, 0, Math.PI*2);
-          ctx.strokeStyle = 'rgba(255,255,255,0.1)';
-          ctx.lineWidth = 1;
-          ctx.stroke();
-          
+          ctx.closePath(); ctx.strokeStyle = 'rgba(255,255,255,0.15)'; ctx.lineWidth = 1.5; ctx.stroke();
+          ctx.beginPath(); ctx.arc(0, 0, innerRadius, 0, Math.PI*2); ctx.strokeStyle = 'rgba(255,255,255,0.1)'; ctx.lineWidth = 1; ctx.stroke();
           ctx.restore();
         }
-
-        function draw(){
+        function frame(animated){
           ctx.clearRect(0,0,w,h);
-          time += 0.01;
-          
-          // Draw interconnected gears
-          const gear1X = w * 0.3;
-          const gear1Y = h * 0.5;
-          const gear1Radius = Math.min(w, h) * 0.12;
-          
-          const gear2X = w * 0.7;
-          const gear2Y = h * 0.5;
-          const gear2Radius = Math.min(w, h) * 0.08;
-          
+          if (animated) time += 0.01;
+          const gear1X = w * 0.3; const gear1Y = h * 0.5; const gear1Radius = Math.min(w, h) * 0.12;
+          const gear2X = w * 0.7; const gear2Y = h * 0.5; const gear2Radius = Math.min(w, h) * 0.08;
           drawGear(gear1X, gear1Y, gear1Radius, 12, time);
-          drawGear(gear2X, gear2Y, gear2Radius, 8, -time * 1.5);
-          
-          // Connection line between gears
-          ctx.beginPath();
-          ctx.moveTo(gear1X + gear1Radius, gear1Y);
-          ctx.lineTo(gear2X - gear2Radius, gear2Y);
-          ctx.strokeStyle = 'rgba(255,255,255,0.08)';
-          ctx.lineWidth = 1;
-          ctx.stroke();
-          
-          requestAnimationFrame(draw);
+          drawGear(gear2X, gear2Y, gear2Radius, 8, -(animated ? time * 1.5 : 0.6));
+          ctx.beginPath(); ctx.moveTo(gear1X + gear1Radius, gear1Y); ctx.lineTo(gear2X - gear2Radius, gear2Y);
+          ctx.strokeStyle = 'rgba(255,255,255,0.08)'; ctx.lineWidth = 1; ctx.stroke();
         }
-
+        function animate(){ frame(true); requestAnimationFrame(animate); }
         resize();
-        draw();
+        if (mediaReduce.matches){ frame(false); }
+        else { animate(); }
         window.addEventListener('resize', resize);
       });
     })();
