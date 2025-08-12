@@ -109,12 +109,11 @@
     /* Thumbs */
     .thumb{width:100%;height:180px;border-radius:16px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;letter-spacing:.4px;text-transform:uppercase;position:relative;overflow:hidden;text-align:center;padding:0 16px;z-index:0;box-shadow:var(--shadow-lg);transition:all .4s cubic-bezier(0.4, 0, 0.2, 1)}
     .thumb > *{position:relative;z-index:1;text-shadow:0 2px 10px rgba(0,0,0,.4);transition:transform .4s cubic-bezier(0.4, 0, 0.2, 1)}
-    .thumb:hover{transform:scale(1.02);box-shadow:0 25px 80px rgba(0,0,0,.2)}
+    .thumb:hover{transform:scale(1.02);box-shadow:var(--shadow-lg)}
     .thumb:hover > *{transform:scale(1.05)}
 
-    /* Enhanced text highlight that matches text width */
-    .thumb .thumb-label{position:relative;display:inline-block;padding:0 .15em;z-index:1}
-    .thumb .thumb-label::after{content:"";position:absolute;left:0;right:0;bottom:.1em;height:.7em;border-radius:8px;background:rgba(255,255,255,.18);z-index:-1}
+    /* Title highlight — thinner and spans full text width */
+    .thumb .thumb-label{position:relative;display:inline-block;padding:0 .15em;background-image:linear-gradient(to top, rgba(255,255,255,.18) 0.45em, rgba(255,255,255,0) 0.46em);background-repeat:no-repeat;background-size:100% 1em;background-position:0 100%}
 
     /* Themed thumbs */
     .thumb.water{background:radial-gradient(60% 100% at 20% 0%, rgba(255,255,255,.3) 0 50%, transparent 51%),radial-gradient(40% 80% at 90% 30%, rgba(255,255,255,.2) 0 50%, transparent 51%),linear-gradient(135deg,#0ea5e9,var(--brand),var(--accent) 80%)}
@@ -237,9 +236,8 @@
       .theme-toggle{top:16px;right:16px;padding:8px 12px}
     }
 
-    /* Reduced motion */
+    /* Reduced motion (kept for UI flourishes, but project canvases will still animate) */
     @media (prefers-reduced-motion: reduce){
-      *{animation:none !important; transition:none !important}
       .card:hover,.btn:hover{transform:none !important}
       .hero::before{display:none}
       .skill-bar{transition:none}
@@ -445,11 +443,12 @@
     // Year
     document.getElementById('y').textContent = new Date().getFullYear();
 
+    // NOTE: We keep reduced-motion for UI flourishes only — project canvases always animate.
     const mediaReduce = window.matchMedia('(prefers-reduced-motion: reduce)');
 
     // Cursor-follow glow in hero
     const hero = document.querySelector('.hero');
-    if(hero && !mediaReduce.matches){
+    if(hero){
       hero.addEventListener('pointermove', (e)=>{
         const r = hero.getBoundingClientRect();
         const x = ((e.clientX - r.left)/r.width)*100 + '%';
@@ -465,19 +464,10 @@
         entries.forEach(entry=>{
           if(entry.isIntersecting){ 
             entry.target.classList.add('in'); 
-            // Animate skill bars when they come into view
-            if(entry.target.querySelector('.skill-bar')){
-              setTimeout(() => {
-                entry.target.querySelectorAll('.skill-bar').forEach(bar => {
-                  bar.style.width = bar.style.width || '0%';
-                });
-              }, 200);
-            }
             io.unobserve(entry.target); 
           }
         });
       },{threshold:.12});
-      
       document.querySelectorAll('.reveal, .fade').forEach(el=> io.observe(el));
     });
 
@@ -522,6 +512,21 @@
       return {canvas, ctx};
     }
 
+    // Utility: create a per-tile intersection-aware animation loop
+    function runTileLoop(tile, frame){
+      let running = true; // always animate when visible
+      const io = new IntersectionObserver((entries)=>{
+        entries.forEach(entry=>{ running = entry.isIntersecting; });
+      });
+      io.observe(tile);
+
+      function tick(){
+        frame(running); // if not running, draw a static frame
+        requestAnimationFrame(tick);
+      }
+      tick();
+    }
+
     // ===== Path tile animation (A* pathfinding simulation) =====
     (function(){
       const tiles = document.querySelectorAll('.thumb.path');
@@ -531,26 +536,26 @@
         let w=0,h=0, dpr=1, time=0;
         let grid = [], obstacles = [], paths = [], robots = [];
         const gridSize = 12;
-        
+
         function resize(){
           const rect = tile.getBoundingClientRect();
-          w = Math.floor(rect.width);
-          h = Math.floor(rect.height);
+          w = Math.max(1, Math.floor(rect.width));
+          h = Math.max(1, Math.floor(rect.height));
           dpr = Math.min(window.devicePixelRatio || 1, 2);
           canvas.width = w * dpr; canvas.height = h * dpr;
           canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
           ctx.setTransform(dpr,0,0,dpr,0,0);
           initWarehouse();
         }
-        
+
+        const ro = new ResizeObserver(resize); ro.observe(tile);
+
         function initWarehouse(){
-          // Create warehouse grid
           const cols = Math.floor(w / gridSize);
           const rows = Math.floor(h / gridSize);
           grid = Array(rows).fill().map(() => Array(cols).fill(0));
           obstacles = [];
-          
-          // Add warehouse obstacles (shelves, walls)
+
           const obstaclePositions = [
             {x: Math.floor(cols*0.25), y: Math.floor(rows*0.3), w: 2, h: 4},
             {x: Math.floor(cols*0.6), y: Math.floor(rows*0.2), w: 3, h: 2},
@@ -558,7 +563,7 @@
             {x: Math.floor(cols*0.75), y: Math.floor(rows*0.7), w: 2, h: 2},
             {x: Math.floor(cols*0.15), y: Math.floor(rows*0.75), w: 3, h: 1},
           ];
-          
+
           obstaclePositions.forEach(obs => {
             for(let y = obs.y; y < Math.min(obs.y + obs.h, rows); y++) {
               for(let x = obs.x; x < Math.min(obs.x + obs.w, cols); x++) {
@@ -569,11 +574,9 @@
               }
             }
           });
-          
-          // Generate realistic A* paths
+
           paths = generateAStarPaths(cols, rows);
-          
-          // Initialize robots
+
           robots = [];
           for(let i = 0; i < 3; i++) {
             const pathIndex = i % paths.length;
@@ -589,7 +592,7 @@
             }
           }
         }
-        
+
         function generateAStarPaths(cols, rows) {
           const paths = [];
           const startPoints = [
@@ -602,462 +605,241 @@
             {x: cols-2, y: Math.floor(rows*0.4)},
             {x: cols-2, y: Math.floor(rows*0.6)}
           ];
-          
+
           startPoints.forEach((start, i) => {
             const end = endPoints[i % endPoints.length];
             const path = findAStarPath(start, end, cols, rows);
             if(path) paths.push(path);
           });
-          
+
           return paths;
         }
-        
+
         function findAStarPath(start, goal, cols, rows) {
           const openSet = [{...start, g: 0, h: manhattanDistance(start, goal), f: manhattanDistance(start, goal), parent: null}];
           const closedSet = new Set();
-          const visited = Array(rows).fill().map(() => Array(cols).fill(false));
-          
+
           while(openSet.length > 0) {
             openSet.sort((a, b) => a.f - b.f);
             const current = openSet.shift();
             const key = `${current.x},${current.y}`;
-            
+
             if(current.x === goal.x && current.y === goal.y) {
-              // Reconstruct path
               const path = [];
               let node = current;
-              while(node) {
-                path.unshift({x: node.x, y: node.y});
-                node = node.parent;
-              }
+              while(node) { path.unshift({x: node.x, y: node.y}); node = node.parent; }
               return path;
             }
-            
+
             closedSet.add(key);
-            
-            // Check neighbors
+
             const neighbors = [
               {x: current.x + 1, y: current.y},
               {x: current.x - 1, y: current.y},
               {x: current.x, y: current.y + 1},
               {x: current.x, y: current.y - 1}
             ];
-            
+
             neighbors.forEach(neighbor => {
               if(neighbor.x < 0 || neighbor.x >= cols || neighbor.y < 0 || neighbor.y >= rows) return;
               if(grid[neighbor.y] && grid[neighbor.y][neighbor.x] === 1) return; // obstacle
-              
+
               const neighborKey = `${neighbor.x},${neighbor.y}`;
               if(closedSet.has(neighborKey)) return;
-              
+
               const g = current.g + 1;
               const h = manhattanDistance(neighbor, goal);
               const f = g + h;
-              
+
               const existingNode = openSet.find(n => n.x === neighbor.x && n.y === neighbor.y);
               if(!existingNode) {
                 openSet.push({...neighbor, g, h, f, parent: current});
               } else if(g < existingNode.g) {
-                existingNode.g = g;
-                existingNode.f = f;
-                existingNode.parent = current;
+                existingNode.g = g; existingNode.f = f; existingNode.parent = current;
               }
             });
           }
-          
-          return null; // No path found
+          return null;
         }
-        
-        function manhattanDistance(a, b) {
-          return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
-        }
-        
+
+        function manhattanDistance(a, b) { return Math.abs(a.x - b.x) + Math.abs(a.y - b.y); }
+
         function frame(animated) {
           ctx.clearRect(0, 0, w, h);
           if(animated) time += 0.016;
-          
-          // Draw grid background
+
+          // Grid
           ctx.strokeStyle = 'rgba(255,255,255,0.08)';
           ctx.lineWidth = 0.5;
-          for(let x = 0; x < w; x += gridSize) {
-            ctx.beginPath();
-            ctx.moveTo(x, 0);
-            ctx.lineTo(x, h);
-            ctx.stroke();
-          }
-          for(let y = 0; y < h; y += gridSize) {
-            ctx.beginPath();
-            ctx.moveTo(0, y);
-            ctx.lineTo(w, y);
-            ctx.stroke();
-          }
-          
-          // Draw obstacles (warehouse shelves)
+          for(let x = 0; x < w; x += gridSize) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
+          for(let y = 0; y < h; y += gridSize) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
+
+          // Obstacles
           ctx.fillStyle = 'rgba(255,255,255,0.25)';
-          obstacles.forEach(obs => {
-            ctx.fillRect(obs.x + 1, obs.y + 1, gridSize - 2, gridSize - 2);
-          });
-          
-          // Draw paths
+          obstacles.forEach(obs => { ctx.fillRect(obs.x + 1, obs.y + 1, gridSize - 2, gridSize - 2); });
+
+          // Paths
           ctx.strokeStyle = 'rgba(52,211,153,0.3)';
           ctx.lineWidth = 2;
           paths.forEach(path => {
             if(path.length < 2) return;
             ctx.beginPath();
             ctx.moveTo(path[0].x * gridSize + gridSize/2, path[0].y * gridSize + gridSize/2);
-            for(let i = 1; i < path.length; i++) {
-              ctx.lineTo(path[i].x * gridSize + gridSize/2, path[i].y * gridSize + gridSize/2);
-            }
+            for(let i = 1; i < path.length; i++) { ctx.lineTo(path[i].x * gridSize + gridSize/2, path[i].y * gridSize + gridSize/2); }
             ctx.stroke();
           });
-          
+
           if(!animated) return;
-          
-          // Animate robots along paths
+
+          // Robots
           robots.forEach(robot => {
             const path = paths[robot.pathIndex];
             if(!path || path.length < 2) return;
-            
             const segment = robot.segmentIndex;
-            if(segment >= path.length - 1) {
-              robot.segmentIndex = 0;
-              robot.t = 0;
-              return;
-            }
-            
+            if(segment >= path.length - 1) { robot.segmentIndex = 0; robot.t = 0; return; }
             const start = path[segment];
             const end = path[segment + 1];
-            
             const x = (start.x + (end.x - start.x) * robot.t) * gridSize + gridSize/2;
             const y = (start.y + (end.y - start.y) * robot.t) * gridSize + gridSize/2;
-            
-            // Draw robot with trail effect
-            ctx.fillStyle = robot.color;
-            ctx.shadowColor = robot.color;
-            ctx.shadowBlur = 8;
-            ctx.beginPath();
-            ctx.arc(x, y, robot.size, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.shadowBlur = 0;
-            
-            // Update position
-            robot.t += robot.speed;
-            if(robot.t >= 1) {
-              robot.t = 0;
-              robot.segmentIndex++;
-            }
+            ctx.fillStyle = robot.color; ctx.shadowColor = robot.color; ctx.shadowBlur = 8;
+            ctx.beginPath(); ctx.arc(x, y, robot.size, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
+            robot.t += robot.speed; if(robot.t >= 1) { robot.t = 0; robot.segmentIndex++; }
           });
         }
-        
-        function animate() { 
-          frame(true); 
-          requestAnimationFrame(animate); 
-        }
-        
-        function drawStatic() { 
-          frame(false); 
-        }
-        
+
         resize();
-        if (mediaReduce.matches) { 
-          drawStatic(); 
-        } else { 
-          animate(); 
-        }
-        window.addEventListener('resize', resize);
+        runTileLoop(tile, frame);
       });
     })();
 
-    // ===== Water tile animation (enhanced fluid simulation) =====
+    // ===== Water tile animation (flowing waves & droplets) =====
     (function(){
       const tiles = document.querySelectorAll('.thumb.water');
       if (!tiles.length) return;
       tiles.forEach(tile => {
         const {canvas, ctx} = mountCanvas(tile);
-        let w=0,h=0, dpr=1, time=0;
-        let droplets = [];
-        
+        let w=0,h=0, dpr=1, time=0; let droplets = [];
+
         function resize(){
           const rect = tile.getBoundingClientRect();
-          w = Math.floor(rect.width);
-          h = Math.floor(rect.height);
+          w = Math.max(1, Math.floor(rect.width));
+          h = Math.max(1, Math.floor(rect.height));
           dpr = Math.min(window.devicePixelRatio || 1, 2);
           canvas.width = w * dpr; canvas.height = h * dpr;
           canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
           ctx.setTransform(dpr,0,0,dpr,0,0);
           initDroplets();
         }
-        
+        const ro = new ResizeObserver(resize); ro.observe(tile);
+
         function initDroplets() {
           droplets = [];
           for(let i = 0; i < 8; i++) {
-            droplets.push({
-              x: Math.random() * w,
-              y: Math.random() * h,
-              vx: (Math.random() - 0.5) * 0.5,
-              vy: (Math.random() - 0.5) * 0.5,
-              size: 2 + Math.random() * 3,
-              opacity: 0.3 + Math.random() * 0.4,
-              phase: Math.random() * Math.PI * 2
-            });
+            droplets.push({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random() - 0.5) * 0.5, vy: (Math.random() - 0.5) * 0.5, size: 2 + Math.random() * 3, opacity: 0.3 + Math.random() * 0.4, phase: Math.random() * Math.PI * 2 });
           }
         }
-        
-        function drawFrame(animated){
+
+        function frame(animated){
           ctx.clearRect(0,0,w,h);
           if (animated) time += 0.025;
-          
-          // Draw flowing waves with improved curves
+
           const waves = [
             {amplitude: 20, frequency: 0.015, speed: 1, offset: 0, opacity: 0.15, width: 3},
             {amplitude: 15, frequency: 0.022, speed: 0.8, offset: Math.PI/3, opacity: 0.12, width: 2.5},
             {amplitude: 12, frequency: 0.028, speed: 1.2, offset: Math.PI*2/3, opacity: 0.1, width: 2}
           ];
-          
-          waves.forEach((wave, i) => {
+
+          waves.forEach((wave) => {
             ctx.beginPath();
             ctx.strokeStyle = `rgba(255,255,255,${wave.opacity})`;
-            ctx.lineWidth = wave.width;
-            ctx.lineCap = 'round';
-            
+            ctx.lineWidth = wave.width; ctx.lineCap = 'round';
             const timeOffset = (animated ? time : 1) * wave.speed + wave.offset;
             const baseY = h/2 + Math.sin(timeOffset * 0.3) * 5;
-            
             ctx.moveTo(0, baseY);
-            for(let x = 0; x <= w; x += 1) {
-              const y = baseY + Math.sin(x * wave.frequency + timeOffset) * wave.amplitude;
-              ctx.lineTo(x, y);
-            }
+            for(let x = 0; x <= w; x += 1) { const y = baseY + Math.sin(x * wave.frequency + timeOffset) * wave.amplitude; ctx.lineTo(x, y); }
             ctx.stroke();
           });
-          
+
           if(!animated) return;
-          
-          // Animate droplets with improved physics
-          droplets.forEach(droplet => {
-            // Update position with flow influence
-            const flowInfluence = Math.sin(droplet.x * 0.01 + time * 0.8) * 0.2;
-            droplet.x += droplet.vx + flowInfluence;
-            droplet.y += droplet.vy + Math.sin(time + droplet.phase) * 0.1;
-            
-            // Boundary conditions with smooth wrapping
-            if(droplet.x > w + 10) droplet.x = -10;
-            if(droplet.x < -10) droplet.x = w + 10;
-            if(droplet.y > h + 10) droplet.y = -10;
-            if(droplet.y < -10) droplet.y = h + 10;
-            
-            // Draw droplet with gradient effect
-            const gradient = ctx.createRadialGradient(
-              droplet.x, droplet.y, 0,
-              droplet.x, droplet.y, droplet.size
-            );
-            gradient.addColorStop(0, `rgba(255,255,255,${droplet.opacity})`);
-            gradient.addColorStop(0.7, `rgba(255,255,255,${droplet.opacity * 0.5})`);
-            gradient.addColorStop(1, 'rgba(255,255,255,0)');
-            
-            ctx.fillStyle = gradient;
-            ctx.beginPath();
-            ctx.arc(droplet.x, droplet.y, droplet.size, 0, Math.PI * 2);
-            ctx.fill();
+
+          droplets.forEach(d => {
+            const flowInfluence = Math.sin(d.x * 0.01 + time * 0.8) * 0.2;
+            d.x += d.vx + flowInfluence; d.y += d.vy + Math.sin(time + d.phase) * 0.1;
+            if(d.x > w + 10) d.x = -10; if(d.x < -10) d.x = w + 10; if(d.y > h + 10) d.y = -10; if(d.y < -10) d.y = h + 10;
+            const g = ctx.createRadialGradient(d.x, d.y, 0, d.x, d.y, d.size);
+            g.addColorStop(0, `rgba(255,255,255,${d.opacity})`); g.addColorStop(0.7, `rgba(255,255,255,${d.opacity * 0.5})`); g.addColorStop(1, 'rgba(255,255,255,0)');
+            ctx.fillStyle = g; ctx.beginPath(); ctx.arc(d.x, d.y, d.size, 0, Math.PI * 2); ctx.fill();
           });
-          
-          // Add bubbles effect
-          for(let i = 0; i < 5; i++) {
-            const bubbleTime = time + i * Math.PI / 2;
-            const x = (bubbleTime * 0.3 % 1) * w;
-            const y = h/2 + Math.sin(bubbleTime * 2) * 25 + Math.sin(bubbleTime * 0.7) * 10;
-            const size = 1.5 + Math.sin(bubbleTime * 3) * 1;
-            const opacity = 0.2 + Math.sin(bubbleTime * 1.5) * 0.15;
-            
-            ctx.beginPath();
-            ctx.fillStyle = `rgba(255,255,255,${opacity})`;
-            ctx.arc(x, y, size, 0, Math.PI * 2);
-            ctx.fill();
-          }
+
+          for(let i = 0; i < 5; i++) { const bt = time + i * Math.PI / 2; const x = (bt * 0.3 % 1) * w; const y = h/2 + Math.sin(bt * 2) * 25 + Math.sin(bt * 0.7) * 10; const size = 1.5 + Math.sin(bt * 3) * 1; const o = 0.2 + Math.sin(bt * 1.5) * 0.15; ctx.beginPath(); ctx.fillStyle = `rgba(255,255,255,${o})`; ctx.arc(x, y, size, 0, Math.PI * 2); ctx.fill(); }
         }
-        
-        function animate(){ 
-          drawFrame(true); 
-          requestAnimationFrame(animate); 
-        }
-        
+
         resize();
-        if (mediaReduce.matches){ 
-          drawFrame(false); 
-        } else { 
-          animate(); 
-        }
-        window.addEventListener('resize', resize);
+        runTileLoop(tile, frame);
       });
     })();
 
-    // ===== CAD gear animation (enhanced mechanical simulation) =====
+    // ===== CAD gear animation (mechanical) =====
     (function(){
       const tiles = document.querySelectorAll('.thumb.cad');
       if (!tiles.length) return;
       tiles.forEach(tile => {
         const {canvas, ctx} = mountCanvas(tile);
-        let w=0,h=0, dpr=1, time=0;
-        let sparkles = [];
-        
+        let w=0,h=0, dpr=1, time=0; let sparkles = [];
+
         function resize(){
           const rect = tile.getBoundingClientRect();
-          w = Math.floor(rect.width);
-          h = Math.floor(rect.height);
+          w = Math.max(1, Math.floor(rect.width));
+          h = Math.max(1, Math.floor(rect.height));
           dpr = Math.min(window.devicePixelRatio || 1, 2);
           canvas.width = w * dpr; canvas.height = h * dpr;
           canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
           ctx.setTransform(dpr,0,0,dpr,0,0);
           initSparkles();
         }
-        
+        const ro = new ResizeObserver(resize); ro.observe(tile);
+
         function initSparkles() {
           sparkles = [];
           for(let i = 0; i < 6; i++) {
-            sparkles.push({
-              x: Math.random() * w,
-              y: Math.random() * h,
-              size: 0.5 + Math.random() * 1.5,
-              opacity: 0.2 + Math.random() * 0.4,
-              phase: Math.random() * Math.PI * 2,
-              speed: 0.02 + Math.random() * 0.02
-            });
+            sparkles.push({ x: Math.random() * w, y: Math.random() * h, size: 0.5 + Math.random() * 1.5, opacity: 0.2 + Math.random() * 0.4, phase: Math.random() * Math.PI * 2, speed: 0.02 + Math.random() * 0.02 });
           }
         }
-        
+
         function drawGear(x, y, radius, teeth, rotation, strokeOpacity = 0.15, fillOpacity = 0.05) {
-          ctx.save(); 
-          ctx.translate(x, y); 
-          ctx.rotate(rotation);
-          
-          const innerRadius = radius * 0.65; 
-          const toothHeight = radius * 0.25;
-          const outerRadius = radius + toothHeight;
-          
-          // Draw gear body with gradient
+          ctx.save(); ctx.translate(x, y); ctx.rotate(rotation);
+          const innerRadius = radius * 0.65; const toothHeight = radius * 0.25; const outerRadius = radius + toothHeight;
           const gradient = ctx.createRadialGradient(0, 0, innerRadius, 0, 0, outerRadius);
-          gradient.addColorStop(0, `rgba(255,255,255,${fillOpacity})`);
-          gradient.addColorStop(1, 'rgba(255,255,255,0)');
-          
+          gradient.addColorStop(0, `rgba(255,255,255,${fillOpacity})`); gradient.addColorStop(1, 'rgba(255,255,255,0)');
           ctx.beginPath();
           for(let i = 0; i < teeth; i++){
-            const angle1 = (i / teeth) * Math.PI * 2;
-            const angle2 = ((i + 0.3) / teeth) * Math.PI * 2;
-            const angle3 = ((i + 0.7) / teeth) * Math.PI * 2;
-            const angle4 = ((i + 1) / teeth) * Math.PI * 2;
-            
-            const x1 = Math.cos(angle1) * radius; 
-            const y1 = Math.sin(angle1) * radius;
-            const x2 = Math.cos(angle2) * outerRadius; 
-            const y2 = Math.sin(angle2) * outerRadius;
-            const x3 = Math.cos(angle3) * outerRadius; 
-            const y3 = Math.sin(angle3) * outerRadius;
-            const x4 = Math.cos(angle4) * radius; 
-            const y4 = Math.sin(angle4) * radius;
-            
-            if(i === 0) ctx.moveTo(x1, y1);
-            ctx.lineTo(x2, y2); 
-            ctx.lineTo(x3, y3); 
-            ctx.lineTo(x4, y4);
+            const a1 = (i / teeth) * Math.PI * 2; const a2 = ((i + 0.3) / teeth) * Math.PI * 2; const a3 = ((i + 0.7) / teeth) * Math.PI * 2; const a4 = ((i + 1) / teeth) * Math.PI * 2;
+            const x1 = Math.cos(a1) * radius, y1 = Math.sin(a1) * radius; const x2 = Math.cos(a2) * outerRadius, y2 = Math.sin(a2) * outerRadius; const x3 = Math.cos(a3) * outerRadius, y3 = Math.sin(a3) * outerRadius; const x4 = Math.cos(a4) * radius, y4 = Math.sin(a4) * radius;
+            if(i === 0) ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.lineTo(x3, y3); ctx.lineTo(x4, y4);
           }
-          ctx.closePath(); 
-          
-          // Fill gear
-          ctx.fillStyle = gradient;
-          ctx.fill();
-          
-          // Stroke gear outline
-          ctx.strokeStyle = `rgba(255,255,255,${strokeOpacity})`;
-          ctx.lineWidth = 1.8;
-          ctx.lineCap = 'round';
-          ctx.lineJoin = 'round';
-          ctx.stroke();
-          
-          // Draw center hub
-          ctx.beginPath(); 
-          ctx.arc(0, 0, innerRadius, 0, Math.PI*2);
-          ctx.strokeStyle = `rgba(255,255,255,${strokeOpacity * 0.8})`;
-          ctx.lineWidth = 1.2;
-          ctx.stroke();
-          
-          // Add center dot
-          ctx.beginPath();
-          ctx.arc(0, 0, innerRadius * 0.3, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(255,255,255,${strokeOpacity * 0.6})`;
-          ctx.fill();
-          
+          ctx.closePath(); ctx.fillStyle = gradient; ctx.fill();
+          ctx.strokeStyle = `rgba(255,255,255,${strokeOpacity})`; ctx.lineWidth = 1.8; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.stroke();
+          ctx.beginPath(); ctx.arc(0, 0, innerRadius, 0, Math.PI*2); ctx.strokeStyle = `rgba(255,255,255,${strokeOpacity * 0.8})`; ctx.lineWidth = 1.2; ctx.stroke();
+          ctx.beginPath(); ctx.arc(0, 0, innerRadius * 0.3, 0, Math.PI * 2); ctx.fillStyle = `rgba(255,255,255,${strokeOpacity * 0.6})`; ctx.fill();
           ctx.restore();
         }
-        
+
         function frame(animated){
-          ctx.clearRect(0,0,w,h);
-          if (animated) time += 0.008;
-          
-          // Enhanced gear positioning and sizing
-          const gear1X = w * 0.28; 
-          const gear1Y = h * 0.45; 
-          const gear1Radius = Math.min(w, h) * 0.14;
-          const gear2X = w * 0.72; 
-          const gear2Y = h * 0.55; 
-          const gear2Radius = Math.min(w, h) * 0.10;
-          const gear3X = w * 0.5; 
-          const gear3Y = h * 0.25; 
-          const gear3Radius = Math.min(w, h) * 0.08;
-          
-          // Draw connection lines between gears
-          ctx.strokeStyle = 'rgba(255,255,255,0.06)';
-          ctx.lineWidth = 1;
-          ctx.setLineDash([3, 3]);
-          ctx.beginPath();
-          ctx.moveTo(gear1X, gear1Y);
-          ctx.lineTo(gear2X, gear2Y);
-          ctx.moveTo(gear1X, gear1Y);
-          ctx.lineTo(gear3X, gear3Y);
-          ctx.stroke();
-          ctx.setLineDash([]);
-          
-          // Draw gears with proper mechanical ratios
-          const baseRotation = animated ? time : 0.5;
-          drawGear(gear1X, gear1Y, gear1Radius, 16, baseRotation, 0.18, 0.08);
-          drawGear(gear2X, gear2Y, gear2Radius, 10, -baseRotation * 1.6, 0.16, 0.06); // 16/10 ratio
-          drawGear(gear3X, gear3Y, gear3Radius, 8, baseRotation * 2, 0.14, 0.04); // 16/8 ratio
-          
+          ctx.clearRect(0,0,w,h); if (animated) time += 0.008;
+          const g1x = w * 0.28, g1y = h * 0.45, r1 = Math.min(w, h) * 0.14;
+          const g2x = w * 0.72, g2y = h * 0.55, r2 = Math.min(w, h) * 0.10;
+          const g3x = w * 0.5,  g3y = h * 0.25, r3 = Math.min(w, h) * 0.08;
+          ctx.strokeStyle = 'rgba(255,255,255,0.06)'; ctx.lineWidth = 1; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(g1x,g1y); ctx.lineTo(g2x,g2y); ctx.moveTo(g1x,g1y); ctx.lineTo(g3x,g3y); ctx.stroke(); ctx.setLineDash([]);
+          const base = animated ? time : 0.5;
+          drawGear(g1x,g1y,r1,16, base, 0.18, 0.08);
+          drawGear(g2x,g2y,r2,10,-base * 1.6, 0.16, 0.06);
+          drawGear(g3x,g3y,r3, 8, base * 2,   0.14, 0.04);
           if(!animated) return;
-          
-          // Animate sparkles for CAD/manufacturing effect
-          sparkles.forEach(sparkle => {
-            sparkle.phase += sparkle.speed;
-            const opacity = sparkle.opacity * (0.5 + 0.5 * Math.sin(sparkle.phase));
-            
-            ctx.beginPath();
-            ctx.fillStyle = `rgba(255,255,255,${opacity})`;
-            ctx.arc(sparkle.x, sparkle.y, sparkle.size, 0, Math.PI * 2);
-            ctx.fill();
-            
-            // Slowly drift sparkles
-            sparkle.x += Math.sin(sparkle.phase * 0.1) * 0.1;
-            sparkle.y += Math.cos(sparkle.phase * 0.15) * 0.1;
-            
-            // Reset if out of bounds
-            if(sparkle.x < 0 || sparkle.x > w || sparkle.y < 0 || sparkle.y > h) {
-              sparkle.x = Math.random() * w;
-              sparkle.y = Math.random() * h;
-            }
-          });
+          sparkles.forEach(s => { s.phase += s.speed; const o = s.opacity * (0.5 + 0.5 * Math.sin(s.phase)); ctx.beginPath(); ctx.fillStyle = `rgba(255,255,255,${o})`; ctx.arc(s.x, s.y, s.size, 0, Math.PI*2); ctx.fill(); s.x += Math.sin(s.phase * 0.1) * 0.1; s.y += Math.cos(s.phase * 0.15) * 0.1; if(s.x < 0 || s.x > w || s.y < 0 || s.y > h){ s.x = Math.random()*w; s.y = Math.random()*h; } });
         }
-        
-        function animate(){ 
-          frame(true); 
-          requestAnimationFrame(animate); 
-        }
-        
+
         resize();
-        if (mediaReduce.matches){ 
-          frame(false); 
-        } else { 
-          animate(); 
-        }
-        window.addEventListener('resize', resize);
+        runTileLoop(tile, frame);
       });
     })();
 
@@ -1078,22 +860,8 @@
         scrollProgress.style.width = Math.min(scrollPercent, 100) + '%';
       }
       window.addEventListener('scroll', updateScrollProgress);
-      updateScrollProgress(); // Initial call
+      updateScrollProgress();
     }
-
-    // Performance optimization: pause animations when not visible
-    const animationObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        const canvas = entry.target.querySelector('canvas');
-        if (canvas) {
-          canvas.style.animationPlayState = entry.isIntersecting ? 'running' : 'paused';
-        }
-      });
-    });
-
-    document.querySelectorAll('.thumb').forEach(thumb => {
-      animationObserver.observe(thumb);
-    });
   </script>
 </body>
 </html>
