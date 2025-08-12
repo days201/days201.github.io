@@ -480,12 +480,14 @@
     }
 
     // Reveal on scroll
-    const io = new IntersectionObserver((entries)=>{
-      entries.forEach(entry=>{
-        if(entry.isIntersecting){ entry.target.classList.add('in'); io.unobserve(entry.target); }
-      });
-    },{threshold:.12});
-    document.querySelectorAll('.reveal').forEach(el=> io.observe(el));
+    document.addEventListener('DOMContentLoaded', function() {
+      const io = new IntersectionObserver((entries)=>{
+        entries.forEach(entry=>{
+          if(entry.isIntersecting){ entry.target.classList.add('in'); io.unobserve(entry.target); }
+        });
+      },{threshold:.12});
+      document.querySelectorAll('.reveal, .fade').forEach(el=> io.observe(el));
+    });
 
     // Magnetic buttons (subtle)
     document.querySelectorAll('.magnet').forEach(btn=>{
