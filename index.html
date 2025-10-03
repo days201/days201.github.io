@@ -20,10 +20,10 @@
   <meta name="twitter:card" content="summary_large_image" />
 
   <style>
-    :root{
+    :root {
       --bg: #f8fafc;
       --card: #ffffff;
-      --ink: #0f172a; /* deeper contrast for better readability */
+      --ink: #0f172a;
       --muted: #475569;
       --brand: #3b82f6;
       --brand-light: #60a5fa;
@@ -45,29 +45,29 @@
       --glass: rgba(255,255,255,.85);
       --hover-bg: rgba(255,255,255,.98);
     }
-    @media (prefers-color-scheme: dark){
-      :root{
-        --bg: #0f172a;
-        --card: #1e293b;
-        --ink: #f1f5f9;
-        --muted: #94a3b8;
-        --brand: #60a5fa;
-        --brand-light: #93c5fd;
-        --accent: #34d399;
-        --accent-light: #6ee7b7;
-        --accent2: #fbbf24;
-        --accent2-light: #fcd34d;
-        --ring: rgba(96,165,250,.3);
-        --ring-accent: rgba(52,211,153,.3);
-        --shadow: 0 15px 50px rgba(0,0,0,.4);
-        --shadow-lg: 0 25px 80px rgba(0,0,0,.5);
-        --border: #334155;
-        --border-light: #475569;
-        --chip-bg: #1e293b;
-        --glass: rgba(30,41,59,.9);
-        --hover-bg: #475569;
-      }
+    
+    :root[data-theme='dark'] {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --ink: #f1f5f9;
+      --muted: #94a3b8;
+      --brand: #60a5fa;
+      --brand-light: #93c5fd;
+      --accent: #34d399;
+      --accent-light: #6ee7b7;
+      --accent2: #fbbf24;
+      --accent2-light: #fcd34d;
+      --ring: rgba(96,165,250,.3);
+      --ring-accent: rgba(52,211,153,.3);
+      --shadow: 0 15px 50px rgba(0,0,0,.4);
+      --shadow-lg: 0 25px 80px rgba(0,0,0,.5);
+      --border: #334155;
+      --border-light: #475569;
+      --chip-bg: #1e293b;
+      --glass: rgba(30,41,59,.9);
+      --hover-bg: #475569;
     }
+
 
     /* Global */
     *{box-sizing:border-box}
@@ -251,7 +251,7 @@
 
   <!-- Floating theme toggle -->
   <div class="theme-toggle" title="Toggle theme">
-    <button id="modeBtn" aria-label="Toggle dark mode">🌓</button>
+    <button id="modeBtn" aria-label="Toggle dark mode"></button>
   </div>
 
   <!-- Scroll progress indicator -->
@@ -265,7 +265,7 @@
         <div class="fade">
           <span class="badge">Mechanical Engineering student at Queen's</span>
           <h1>Hello, I'm Daya.</h1>
-          <p class="subtitle">I'm a second-year Mechanical Engineering student passionate about creating sustainable designs that maximize efficiency, performance, and turn innovative ideas into practical solutions.</p>
+          <p class="subtitle">I'm a second-year Mechanical Engineering student passionate about sustainable design, public transportation and HVAC systems.</p>
           <div class="cta">
             <a class="btn magnet" href="#projects" aria-label="View projects">View Projects</a>
             <a class="btn magnet" href="mailto:daya.silverstein@queensu.ca" aria-label="Email Daya">Email me</a>
@@ -277,8 +277,8 @@
             <h2 style="margin-top:0">In Summary</h2>
             <ul class="clean">
               <li><strong>Interests:</strong> Sustainable design, HVAC systems, FEA simulation</li>
-              <li><strong>Strengths:</strong> Assembly coordination, CAD modeling, rapid prototyping</li>
-              <li><strong>Looking for:</strong> Engineering internships and collaborative project teams</li>
+              <li><strong>Strengths:</strong> Assembly coordination, CAD modeling, prototyping</li>
+              <li><strong>Looking for:</strong> Summer 2026 internships opportunities</li>
             </ul>
             <div class="chips" style="margin-top:16px">
               <span class="chip">Fusion 360</span>
@@ -297,11 +297,11 @@
           <article class="card tilt reveal">
             <div class="thumb water" aria-label="Water filtration system project with flowing water animation"><span class="thumb-label">Water Filtration System</span></div>
             <h3 style="margin:12px 0 6px">Water Filtration System</h3>
-            <p class="subtitle">Designed and manufactured the mixing assembly; coordinated overall assembly and Arduino timing controls.</p>
+            <p class="subtitle">Designed and manufactured the mixing assembly; coordinated overall assembly and Arduino setup.</p>
             <ul class="clean">
-              <li><strong>Challenge:</strong> Produce potable water from contaminated input using a single, compact system.</li>
+              <li><strong>Challenge:</strong> Produce potable water from dirty lake water using a single autonomous system.</li>
               <li><strong>Solution:</strong> Peristaltic pump + DC motor mixing with alum, followed by mechanical filtration; custom 3D‑printed components.</li>
-              <li><strong>Outcome:</strong> Successfully deployed working prototype with automated timing.</li>
+              <li><strong>Outcome:</strong> Successfully deployed working prototype.</li>
               <li><strong>Status:</strong> Completed • January 2025</li>
             </ul>
             <div class="chips"><span class="chip">Arduino</span><span class="chip">3D printing</span><span class="chip">Peristaltic pump</span><span class="chip">Water treatment</span></div>
@@ -310,12 +310,12 @@
           <article class="card tilt reveal">
             <div class="thumb path" aria-label="Path planning visualization with animated routes"><span class="thumb-label">Path‑Planning</span></div>
             <h3 style="margin:12px 0 6px">Autonomous Path‑Planning for Warehouse Robots</h3>
-            <p class="subtitle">A* pathfinding algorithm with MATLAB simulation to navigate checkpoints while avoiding dynamic obstacles.</p>
+            <p class="subtitle">A* pathfinding algorithm with MATLAB simulation to navigate checkpoints while avoiding static obstacles.</p>
             <ul class="clean">
-              <li><strong>Challenge:</strong> Plan optimal, collision‑free routes through warehouse environments with constraints.</li>
-              <li><strong>Solution:</strong> Implemented A* algorithm with heuristic optimization; comprehensive MATLAB simulation environment.</li>
-              <li><strong>Outcome:</strong> Robust pathfinding system capable of real-time route optimization.</li>
-              <li><strong>Status:</strong> Completed • January 2025</li>
+              <li><strong>Challenge:</strong> Create a program that plans fast, collision‑free routes while avoiding obstacles in a simulated warehouse.</li>
+              <li><strong>Solution:</strong> Implemented A* algorithm for path planning; comprehensive MATLAB simulation environment.</li>
+              <li><strong>Outcome:</strong> Robust pathfinding system capable of reliable route optimization.</li>
+              <li><strong>Status:</strong> Completed • March 2025</li>
             </ul>
             <div class="chips"><span class="chip">A* Algorithm</span><span class="chip">MATLAB</span><span class="chip">Robotics</span></div>
             <div style="margin-top:12px"><a href="https://github.com/mohammedz06/Autonomous-Path-Finding" target="_blank" rel="noopener">View repository →</a></div>
@@ -326,9 +326,9 @@
             <h3 style="margin:12px 0 6px">Fusion Assembly Generator</h3>
             <p class="subtitle">AI-powered tool that converts natural‑language prompts into executable Fusion 360 scripts for mechanical assemblies.</p>
             <ul class="clean">
-              <li><strong>Challenge:</strong> Bridge the gap between design intent and executable CAD through automation.</li>
-              <li><strong>Solution:</strong> Python add‑in leveraging Fusion 360 API with intelligent schema parsing.</li>
-              <li><strong>Status:</strong> In Development • Est. completion March 2025</li>
+              <li><strong>Challenge:</strong> Automate simple CAD prototyping.</li>
+              <li><strong>Solution:</strong> Python add‑in leveraging Fusion 360 API with intelligent schema parsing, powered by GPT-4o.</li>
+              <li><strong>Status:</strong> Proof of concept complete, production ready by 2027</li>
             </ul>
             <div class="chips"><span class="chip">Python</span><span class="chip">Fusion API</span><span class="chip">AI Integration</span><span class="chip">CAD Automation</span></div>
             <div style="margin-top:12px"><a href="https://github.com/days201/Fusion_Assembly_Generator" target="_blank" rel="noopener">View repository →</a></div>
@@ -417,20 +417,20 @@
       <section id="contact" class="section reveal">
         <h2>Let's Connect</h2>
         <div class="card tilt reveal">
-          <p style="margin-top:0">I'm always interested in discussing engineering projects, internship opportunities, or innovative design challenges.</p>
+          <p style="margin-top:0">I'm always interested in discussing engineering projects, internship opportunities and emerging technologies</p>
           <p>
             <a class="btn primary magnet" href="mailto:daya.silverstein@queensu.ca" aria-label="send email">daya.silverstein@queensu.ca</a>
           </p>
           <div class="chips" style="margin-top:16px">
             <a class="chip" href="https://github.com/days201" target="_blank" rel="noopener" aria-label="GitHub Profile">GitHub</a>
-            <a class="chip" href="www.linkedin.com/in/daya-silverstein-81aa13199" target="_blank" rel="noopener" aria-label="LinkedIn Profile">LinkedIn</a>
+            <a class="chip" href="https://www.linkedin.com/in/daya-silverstein-81aa13199" target="_blank" rel="noopener" aria-label="LinkedIn Profile">LinkedIn</a>
           </div>
         </div>
       </section>
     </main>
 
     <footer>
-      <div>© <span id="y"></span> Daya Silverstein • Built with modern web technologies</div>
+      <div>© <span id="y"></span> Designed and built by Daya Silverstein </div>
     </footer>
   </div>
 
@@ -846,12 +846,32 @@
     })();
 
     // Dark mode toggle control
+    // On load: respect saved preference or default to light
+    (function(){
+      const pref = localStorage.getItem('mode') || 'light';
+      document.documentElement.setAttribute('data-theme', pref);
+    })();
+    
+    // Toggle button with sun/moon icon
     const btn = document.getElementById('modeBtn');
+    
+    function setIcon(theme) {
+      btn.textContent = theme === 'dark' ? '🌙' : '☀︎';
+    }
+    
+    // initialize theme + icon on load
+    (function(){
+      const pref = localStorage.getItem('mode') || 'light';
+      document.documentElement.setAttribute('data-theme', pref);
+      setIcon(pref);
+    })();
+    
     btn?.addEventListener('click', ()=>{
-      const cur = getComputedStyle(document.documentElement).colorScheme;
+      const cur = document.documentElement.getAttribute('data-theme');
       const next = cur === 'dark' ? 'light' : 'dark';
-      document.documentElement.style.colorScheme = next;
+      document.documentElement.setAttribute('data-theme', next);
       localStorage.setItem('mode', next);
+      setIcon(next);
     });
 
     // Scroll progress indicator
